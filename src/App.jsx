@@ -1,8 +1,20 @@
 import React from 'react'
+import { Route, Routes } from 'react-router-dom'
 
 const App = () => {
   return (
-    <div>App jckjxjaknav</div>
+    <Routes>
+      <Route path='/' element={<h1>
+        Hello World
+      </h1>} />
+      <Route path='/login' element={<h1>
+        login
+      </h1>} />
+
+
+
+
+    </Routes>
   )
 }
 
