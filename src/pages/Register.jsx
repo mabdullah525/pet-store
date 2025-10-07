@@ -34,17 +34,6 @@ const Register = () => {
                        
                     />
                 </div>
-
-                <div className="form-group">
-                    <label>Phone</label>
-                    <input
-                        type="text"
-                        name="phone"
-                        placeholder="03XX-XXXXXXX"
-                        
-                    />
-                </div>
-
                 <div className="form-group">
                     <label>Address</label>
                     <input
@@ -55,15 +44,6 @@ const Register = () => {
                     />
                 </div>
 
-                <div className="form-group">
-                    <label>Role</label>
-                    <select
-                        name="role"
-                    >
-                        <option value="buyer">Buyer</option>
-                        <option value="seller">Seller</option>
-                    </select>
-                </div>
 
                 <button type="submit" className="submit-btn">
                     Register
