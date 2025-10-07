@@ -1,6 +1,9 @@
 import React from 'react'
+import { useFirebase } from '../context/Firebase.jsx'
 
 const Register = () => {
+    const firebase = useFirebase() // Use the custom hook to access Firebase context
+    console.log(firebase);
     return (
         <div className="register-container">
             <form className="register-form">
@@ -34,16 +37,6 @@ const Register = () => {
                        
                     />
                 </div>
-                <div className="form-group">
-                    <label>Address</label>
-                    <input
-                        type="text"
-                        name="address"
-                        placeholder="Your city or area"
-                        
-                    />
-                </div>
-
 
                 <button type="submit" className="submit-btn">
                     Register
