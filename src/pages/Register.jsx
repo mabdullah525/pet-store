@@ -14,7 +14,7 @@ const Register = () => {
 
     try {
       const result = await firebase.registerUser(email, password);
-      console.log("User created successfully!", result);
+    //   console.log("User created successfully!", result);
 
       setMessage({
         type: "success",
