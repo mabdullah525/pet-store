@@ -3,6 +3,8 @@ import { createContext, useContext } from "react"; // 1. Import createContext fr
 const FirebaseContext = createContext(null); // 2. Create the context with a default value of null
 import { initializeApp } from "firebase/app"; // Import the Firebase SDK
 
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth"; // Import Firebase Authentication functions
+
 // Your web app's Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyDtt_A4Eh77N_Ah4abTak6CRqDEIUFOOX8",
@@ -14,12 +16,16 @@ const firebaseConfig = {
 };
 
 const firebaseApp = initializeApp(firebaseConfig); // Initialize Firebase
-
 export const useFirebase = () => useContext(FirebaseContext); // 3. Create a custom hook to use the context
+const firebaseAuth = getAuth(firebaseApp); // Initialize Firebase Authentication and get a reference to the service
 
 export const FirebaseProvider = ({ children }) => {
+    const createUserWithEmailAndPassword = (email, password) => createUserWithEmailAndPassword(firebaseAuth, email, password); // Function to create a new user with email and password
     return (
-        <FirebaseContext.Provider value={{ /* You can add Firebase-related values here */ }}>
+
+        <FirebaseContext.Provider value={{
+            createUserWithEmailAndPassword
+        }}>
             {children}
         </FirebaseContext.Provider>
     );
