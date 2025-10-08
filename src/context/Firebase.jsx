@@ -4,6 +4,8 @@ import {
   getAuth,
   createUserWithEmailAndPassword as firebaseCreateUserWithEmailAndPassword,
   signInWithEmailAndPassword as firebaseSignInWithEmailAndPassword,
+  signInWithPopup as firebaseSignInWithPopup,
+  GoogleAuthProvider, // 
 } from "firebase/auth";
 
 // 🔥 1. Firebase Configuration
@@ -20,24 +22,33 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 const firebaseAuth = getAuth(firebaseApp);
 
+// ✅ Google Auth Provider
+const googleProvider = new GoogleAuthProvider();
+
 // 🧩 3. Create Context
 const FirebaseContext = createContext(null);
 
-// 🧩 4. Custom Hook (for easy access)
+// 🧩 4. Custom Hook
 export const useFirebase = () => useContext(FirebaseContext);
 
 // 🧩 5. Provider Component
 export const FirebaseProvider = ({ children }) => {
-  // ✅ Function to register a new user
+  // ✅ Register user
   const registerUser = (email, password) =>
     firebaseCreateUserWithEmailAndPassword(firebaseAuth, email, password);
 
-  // ✅ Function to sign in user
+  // ✅ Login user
   const loginUser = (email, password) =>
     firebaseSignInWithEmailAndPassword(firebaseAuth, email, password);
 
+  // ✅ Google Sign-In
+  const signInWithGoogle = () =>
+    firebaseSignInWithPopup(firebaseAuth, googleProvider);
+
   return (
-    <FirebaseContext.Provider value={{ registerUser, loginUser }}>
+    <FirebaseContext.Provider
+      value={{ registerUser, loginUser, signInWithGoogle }}
+    >
       {children}
     </FirebaseContext.Provider>
   );

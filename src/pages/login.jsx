@@ -66,11 +66,10 @@ const Login = () => {
         {/* ✅ Message Box */}
         {message.text && (
           <div
-            className={`text-center p-3 mb-4 rounded-lg font-medium ${
-              message.type === "success"
+            className={`text-center p-3 mb-4 rounded-lg font-medium ${message.type === "success"
                 ? "bg-green-100 text-green-700 border border-green-400"
                 : "bg-red-100 text-red-700 border border-red-400"
-            }`}
+              }`}
           >
             {message.text}
           </div>
@@ -108,7 +107,7 @@ const Login = () => {
         {/* ✅ Google Login Button */}
         <button
           type="button"
-          onClick={handleGoogleLogin}
+          onClick={firebase.signInWithGoogle}
           className="cursor-pointer google-btn mt-3 flex items-center justify-center gap-2 border border-gray-300 rounded-lg py-3 w-full hover:bg-gray-100 transition"
         >
           <img
