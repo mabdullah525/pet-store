@@ -9,12 +9,14 @@ import Topbar from './components/Topbar.jsx'
 
 const App = () => {
   return (
-    <Routes>
-      <Route path='/' element={<h1>Hello World</h1>} />
-      <Route path='/register' element={<Register />} />
-      <Route path='/login' element={<Login />} />
-      <Route path='/topbar' element={<Topbar />} />
-    </Routes>
+    <div>
+      <Topbar />
+      <Routes>
+        <Route path='/' element={<h1>Hello World</h1>} />
+        <Route path='/register' element={<Register />} />
+        <Route path='/login' element={<Login />} />
+      </Routes>
+    </div>
   )
 }
 
