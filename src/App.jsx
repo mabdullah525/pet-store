@@ -5,6 +5,7 @@ import Register from './pages/Register.jsx'
 import Login from './pages/login.jsx'
 
 // Components
+import Topbar from './components/Topbar.jsx'
 
 const App = () => {
   return (
@@ -12,6 +13,7 @@ const App = () => {
       <Route path='/' element={<h1>Hello World</h1>} />
       <Route path='/register' element={<Register />} />
       <Route path='/login' element={<Login />} />
+      <Route path='/topbar' element={<Topbar />} />
     </Routes>
   )
 }
