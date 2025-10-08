@@ -7,6 +7,7 @@ import {
     signInWithPopup as firebaseSignInWithPopup,
     GoogleAuthProvider,
     onAuthStateChanged,
+    signOut,
 } from "firebase/auth";
 import {
     getFirestore,
@@ -31,6 +32,8 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 const firebaseAuth = getAuth(firebaseApp);
 const firestore = getFirestore(firebaseApp);
+
+const logoutUser = () => signOut(firebaseAuth);
 
 // ✅ Google Auth Provider
 const googleProvider = new GoogleAuthProvider();
@@ -153,6 +156,7 @@ export const FirebaseProvider = ({ children }) => {
                 registerUser,
                 loginUser,
                 signInWithGoogle,
+                logoutUser, 
                 isLoggedIn,
                 user,
                 uploadImage,
@@ -162,5 +166,6 @@ export const FirebaseProvider = ({ children }) => {
         >
             {children}
         </FirebaseContext.Provider>
+
     );
 };
