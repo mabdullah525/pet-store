@@ -98,6 +98,33 @@
   @apply flex justify-between items-center border-b border-gray-100 py-3 last:border-0;
 }
 
+/* AddListing.css */
+
+.form-container {
+  @apply p-6 max-w-2xl mx-auto bg-white shadow-md rounded-lg mt-6;
+}
+
+.form-title {
+  @apply text-2xl font-bold mb-4 text-center text-indigo-600;
+}
+
+.form {
+  @apply space-y-4;
+}
+
+.form-input {
+  @apply w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-indigo-400 outline-none;
+}
+
+.form-textarea {
+  @apply w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-indigo-400 outline-none;
+}
+
+.form-button {
+  @apply w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition;
+}
+
+
 
 
 

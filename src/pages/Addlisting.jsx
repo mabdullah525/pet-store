@@ -4,7 +4,6 @@ const Addlisting = () => {
   const [petName, setPetName] = useState("");
   const [breed, setBreed] = useState("");
   const [price, setPrice] = useState("");
-  const [description, setDescription] = useState("");
   const [image, setImage] = useState(null);
 
   const handleSubmit = (e) => {
@@ -42,14 +41,6 @@ const Addlisting = () => {
           className="form-input"
           required
         />
-        <textarea
-          placeholder="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          className="form-textarea"
-          rows="3"
-          required
-        ></textarea>
 
         <input
           type="file"
