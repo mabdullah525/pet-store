@@ -12,13 +12,24 @@ const AddListing = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!image) {
+      alert("❌ Please select an image first!");
+      return;
+    }
+
     setLoading(true);
 
     try {
       // 1️⃣ Upload image to Cloudinary
       const imageUrl = await uploadImage(image);
 
-      // 2️⃣ Add to Firestore
+      if (!imageUrl) {
+        alert("❌ Image upload failed! Check Cloudinary preset.");
+        setLoading(false);
+        return;
+      }
+
+      // 2️⃣ Add pet listing to Firestore
       const success = await addPetListing({
         petName,
         breed,
@@ -36,8 +47,8 @@ const AddListing = () => {
         alert("❌ Failed to add listing!");
       }
     } catch (err) {
-      console.error(err);
-      alert("Something went wrong!");
+      console.error("❌ Error in handleSubmit:", err);
+      alert("❌ Something went wrong!");
     }
 
     setLoading(false);
@@ -72,7 +83,6 @@ const AddListing = () => {
           className="form-input"
           required
         />
-
         <input
           type="file"
           accept="image/*"

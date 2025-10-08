@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { useFirebase } from "../firebase";
+import { useFirebase } from "../context/Firebase.jsx";
+
+
 
 const MyListings = () => {
   const { getMyListings, user } = useFirebase();
   const [pets, setPets] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  
 
   useEffect(() => {
     const fetchListings = async () => {

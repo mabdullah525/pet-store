@@ -6,6 +6,7 @@ import Register from './pages/Register.jsx';
 import Login from './pages/Login.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import Addlisting from './pages/Addlisting.jsx';
+import Mylisting from './pages/Mylisting.jsx';
 
 // Components
 import Topbar from './components/Topbar.jsx';
@@ -23,14 +24,15 @@ const App = () => {
         <Topbar />
 
         {/* ✅ Page content */}
-        <main className="p-6 flex-1">
+        {/* <main className="p-6 flex-1"> */}
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/add-listing" element={<Addlisting />} />
+            <Route path="/my-listings" element={<Mylisting />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
           </Routes>
-        </main>
+        {/* </main> */}
       </div>
     </div>
   );

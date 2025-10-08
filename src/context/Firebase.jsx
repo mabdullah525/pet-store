@@ -17,7 +17,7 @@ import {
     where,
 } from "firebase/firestore";
 
-// 🔥 1. Firebase Configuration
+// 🔥 Firebase Configuration
 const firebaseConfig = {
     apiKey: "AIzaSyDtt_A4Eh77N_Ah4abTak6CRqDEIUFOOX8",
     authDomain: "pet-store-9190c.firebaseapp.com",
@@ -27,7 +27,7 @@ const firebaseConfig = {
     appId: "1:617791038829:web:78c52d8cf91ce0080a6664",
 };
 
-// 🔥 2. Initialize Firebase
+// 🔥 Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
 const firebaseAuth = getAuth(firebaseApp);
 const firestore = getFirestore(firebaseApp);
@@ -35,13 +35,13 @@ const firestore = getFirestore(firebaseApp);
 // ✅ Google Auth Provider
 const googleProvider = new GoogleAuthProvider();
 
-// 🧩 3. Create Context
+// 🧩 Create Context
 const FirebaseContext = createContext(null);
 
-// 🧩 4. Custom Hook
+// 🧩 Custom Hook
 export const useFirebase = () => useContext(FirebaseContext);
 
-// 🧩 5. Provider Component
+// 🧩 Provider Component
 export const FirebaseProvider = ({ children }) => {
     const [user, setUser] = useState(null);
 
@@ -54,23 +54,28 @@ export const FirebaseProvider = ({ children }) => {
         firebaseSignInWithEmailAndPassword(firebaseAuth, email, password);
 
     // ✅ Google Sign-In
-    const signInWithGoogle = () => firebaseSignInWithPopup(firebaseAuth, googleProvider);
+    const signInWithGoogle = () =>
+        firebaseSignInWithPopup(firebaseAuth, googleProvider);
 
-    // ✅ Check login state
+    // ✅ Monitor user state
     useEffect(() => {
-        onAuthStateChanged(firebaseAuth, (currentUser) => {
+        const unsubscribe = onAuthStateChanged(firebaseAuth, (currentUser) => {
             setUser(currentUser || null);
         });
+        return () => unsubscribe();
     }, []);
 
     const isLoggedIn = !!user;
 
-    // ✅ Cloudinary Upload Function
+    // ✅ Cloudinary Image Upload
     const uploadImage = async (file) => {
-        if (!file) return null;
+        if (!file) {
+            console.warn("❌ No file selected for upload");
+            return null;
+        }
 
-        const cloudName = "dp0288fg2";
-        const uploadPreset = "petstore_uploads";
+        const cloudName = "dp0288fg2"; // your Cloudinary cloud name
+        const uploadPreset = "pet_store_upload"; // ← exact preset from Cloudinary
 
         const formData = new FormData();
         formData.append("file", file);
@@ -79,24 +84,35 @@ export const FirebaseProvider = ({ children }) => {
         try {
             const response = await fetch(
                 `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-                {
-                    method: "POST",
-                    body: formData,
-                }
+                { method: "POST", body: formData }
             );
-
             const data = await response.json();
-            console.log("✅ Uploaded to Cloudinary:", data);
+
+            if (data.error) {
+                console.error("❌ Cloudinary Upload Error:", data.error);
+                return null;
+            }
+
+            console.log("✅ Uploaded to Cloudinary:", data.secure_url);
             return data.secure_url;
         } catch (error) {
-            console.error("❌ Cloudinary Upload Error:", error);
+            console.error("❌ Cloudinary Upload Exception:", error);
             return null;
         }
     };
 
-    // ✅ Save Pet Listing to Firestore
+    // ✅ Add Pet Listing (safe Firestore write)
     const addPetListing = async (petData) => {
-        if (!user) return false;
+        if (!user) {
+            console.error("❌ User not logged in!");
+            return false;
+        }
+
+        // Ensure imageUrl exists before adding
+        if (!petData.imageUrl) {
+            console.error("❌ imageUrl is missing. Upload failed?");
+            return false;
+        }
 
         try {
             await addDoc(collection(firestore, "petListings"), {
@@ -104,6 +120,7 @@ export const FirebaseProvider = ({ children }) => {
                 userId: user.uid,
                 createdAt: new Date(),
             });
+            console.log("✅ Pet added to Firestore!");
             return true;
         } catch (error) {
             console.error("❌ Firestore Add Error:", error);
@@ -111,18 +128,23 @@ export const FirebaseProvider = ({ children }) => {
         }
     };
 
-    // ✅ Get Pet Listings by Logged In User
+    // ✅ Get Listings for Current User
     const getMyListings = async () => {
         if (!user) return [];
-        const q = query(
-            collection(firestore, "petListings"),
-            where("userId", "==", user.uid)
-        );
-        const querySnapshot = await getDocs(q);
-        return querySnapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-        }));
+        try {
+            const q = query(
+                collection(firestore, "petListings"),
+                where("userId", "==", user.uid)
+            );
+            const querySnapshot = await getDocs(q);
+            return querySnapshot.docs.map((doc) => ({
+                id: doc.id,
+                ...doc.data(),
+            }));
+        } catch (error) {
+            console.error("❌ Fetch Listings Error:", error);
+            return [];
+        }
     };
 
     return (
