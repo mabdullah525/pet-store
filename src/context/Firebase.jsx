@@ -3,6 +3,7 @@ import { initializeApp } from "firebase/app";
 import {
     getAuth,
     createUserWithEmailAndPassword as firebaseCreateUserWithEmailAndPassword,
+    signInWithEmailAndPassword
 } from "firebase/auth";
 
 // 🔥 1. Firebase Configuration
