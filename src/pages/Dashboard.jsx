@@ -1,7 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Package, ClipboardList, Bell, ShoppingCart } from "lucide-react";
+import { useFirebase } from "../context/Firebase.jsx";
 
 const Dashboard = () => {
+    const { getMyListings } = useFirebase();
+    const [myPetsCount, setMyPetsCount] = useState(0);
+
+    useEffect(() => {
+        const fetchPets = async () => {
+            const pets = await getMyListings();
+            setMyPetsCount(pets.length);
+        };
+        fetchPets();
+    }, [getMyListings]);
+
     const stats = [
         {
             title: "My Orders",
@@ -11,11 +23,10 @@ const Dashboard = () => {
         },
         {
             title: "My Pet Listings",
-            value: "4", // 👈 yahan dynamically number aa sakta hai (jitne pets user ne add kiye)
-            icon: <ClipboardList size={24} />, 
+            value: myPetsCount, // 👈 dynamic count
+            icon: <ClipboardList size={24} />,
             color: "bg-green-100 text-green-600",
         },
-
         {
             title: "Notifications",
             value: "5",

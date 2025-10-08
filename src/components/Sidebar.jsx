@@ -15,7 +15,6 @@ const Sidebar = () => {
     { name: "My Orders", icon: <ShoppingBag size={20} />, path: "/orders" },
     { name: "Add Listing", icon: <PlusCircle size={20} />, path: "/add-listing" },
     { name: "My Listings", icon: <List size={20} />, path: "/my-listings" }, // ✅ NEW TAB
-    { name: "Profile", icon: <User size={20} />, path: "/profile" },
   ];
 
   return (

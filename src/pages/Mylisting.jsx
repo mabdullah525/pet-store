@@ -57,7 +57,7 @@ const MyListings = () => {
             <h3 className="text-lg font-bold text-gray-700">{pet.petName}</h3>
             <p className="text-gray-500">{pet.breed}</p>
             <p className="text-blue-600 font-semibold mt-2">
-              💰 ${pet.price}
+              💰 Rs {pet.price}
             </p>
           </div>
         ))}
