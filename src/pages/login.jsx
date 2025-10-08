@@ -1,20 +1,19 @@
 import React, { useState } from "react";
 import { useFirebase } from "../context/Firebase.jsx";
-import { useNavigate } from "react-router-dom"; // ✅ For redirect after login
+import { useNavigate, Link } from "react-router-dom"; // ✅ Added Link
 
 const Login = () => {
   const firebase = useFirebase();
-  const navigate = useNavigate(); // redirect hook
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState({ type: "", text: "" });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage({ type: "", text: "" }); // reset message before submit
+    setMessage({ type: "", text: "" });
 
     try {
-      // ✅ Call loginUser from Firebase Context
       const result = await firebase.loginUser(email, password);
       console.log("User logged in successfully!", result.user);
 
@@ -23,16 +22,35 @@ const Login = () => {
         text: `🎉 Login successful! Welcome back, ${result.user.email}`,
       });
 
-      // ✅ Optional: Clear input fields
       setEmail("");
       setPassword("");
 
-      // ✅ Redirect after 2 seconds
       setTimeout(() => {
-        navigate("/"); // or "/dashboard"
+        navigate("/");
       }, 2000);
     } catch (error) {
       console.error("Login failed:", error.message);
+      setMessage({
+        type: "error",
+        text: `❌ ${error.message}`,
+      });
+    }
+  };
+
+  // ✅ Handle Google Login
+  const handleGoogleLogin = async () => {
+    try {
+      const result = await firebase.signInWithGoogle();
+      console.log("Google login successful:", result.user);
+
+      setMessage({
+        type: "success",
+        text: `🎉 Logged in with Google as ${result.user.displayName}`,
+      });
+
+      setTimeout(() => navigate("/"), 2000);
+    } catch (error) {
+      console.error("Google Sign-In failed:", error.message);
       setMessage({
         type: "error",
         text: `❌ ${error.message}`,
@@ -48,10 +66,11 @@ const Login = () => {
         {/* ✅ Message Box */}
         {message.text && (
           <div
-            className={`text-center p-3 mb-4 rounded-lg font-medium ${message.type === "success"
+            className={`text-center p-3 mb-4 rounded-lg font-medium ${
+              message.type === "success"
                 ? "bg-green-100 text-green-700 border border-green-400"
                 : "bg-red-100 text-red-700 border border-red-400"
-              }`}
+            }`}
           >
             {message.text}
           </div>
@@ -85,6 +104,28 @@ const Login = () => {
         <button type="submit" className="submit-btn">
           Login
         </button>
+
+        {/* ✅ Google Login Button */}
+        <button
+          type="button"
+          onClick={handleGoogleLogin}
+          className="cursor-pointer google-btn mt-3 flex items-center justify-center gap-2 border border-gray-300 rounded-lg py-3 w-full hover:bg-gray-100 transition"
+        >
+          <img
+            src="https://www.svgrepo.com/show/475656/google-color.svg"
+            alt="Google"
+            className="w-5 h-5"
+          />
+          <span>Sign in with Google</span>
+        </button>
+
+        {/* ✅ Register Link */}
+        <p className="text-center mt-4 text-gray-700">
+          Don’t have an account?{" "}
+          <Link to="/register" className="text-blue-600 hover:underline font-medium">
+            Register here
+          </Link>
+        </p>
       </form>
     </div>
   );
