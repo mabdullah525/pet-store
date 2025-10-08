@@ -1,12 +1,20 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { Home, ShoppingBag, PlusCircle, User, LogOut } from "lucide-react";
+import {
+  Home,
+  ShoppingBag,
+  PlusCircle,
+  User,
+  LogOut,
+  List,
+} from "lucide-react";
 
 const Sidebar = () => {
   const menuItems = [
     { name: "Dashboard", icon: <Home size={20} />, path: "/" },
     { name: "My Orders", icon: <ShoppingBag size={20} />, path: "/orders" },
     { name: "Add Listing", icon: <PlusCircle size={20} />, path: "/add-listing" },
+    { name: "My Listings", icon: <List size={20} />, path: "/my-listings" }, // ✅ NEW TAB
     { name: "Profile", icon: <User size={20} />, path: "/profile" },
   ];
 
