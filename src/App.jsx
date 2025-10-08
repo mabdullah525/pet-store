@@ -11,6 +11,8 @@ import Mylisting from './pages/Mylisting.jsx';
 // Components
 import Topbar from './components/Topbar.jsx';
 import Sidebar from './components/Sidebar.jsx';
+import Profile from './components/profile.jsx';
+
 
 const App = () => {
   return (
@@ -31,6 +33,7 @@ const App = () => {
             <Route path="/my-listings" element={<Mylisting />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/profile" element={<Profile />} />
           </Routes>
         {/* </main> */}
       </div>

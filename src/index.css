@@ -123,6 +123,41 @@
 .form-button {
   @apply w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition;
 }
+/* Topbar */
+.topbar {
+  @apply flex items-center justify-between px-6 py-3 bg-white shadow-md relative;
+}
+
+.logo {
+  @apply text-2xl font-bold text-gray-800 flex items-center gap-2;
+}
+
+/* Search Bar */
+.search-bar {
+  @apply relative w-1/2;
+}
+
+.search-bar input.search-input {
+  @apply w-full border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-400;
+}
+
+.search-bar svg {
+  @apply absolute right-3 top-1/2 -translate-y-1/2 text-gray-400;
+}
+
+/* Icons */
+.icons {
+  @apply flex items-center gap-4 relative;
+}
+
+.icon-btn {
+  @apply p-2 rounded hover:bg-gray-100;
+}
+
+/* Profile Modal wrapper */
+.profile-modal {
+  @apply absolute top-12 right-0 z-50;
+}
 
 
 

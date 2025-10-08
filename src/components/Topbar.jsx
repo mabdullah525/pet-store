@@ -1,35 +1,49 @@
-import React from "react";
+import React, { useState } from "react";
 import { Search, ShoppingCart, Bell, User } from "lucide-react";
+import Profile from "./profile.jsx";
+
 
 const Topbar = () => {
+  const [showProfile, setShowProfile] = useState(false);
+
   return (
     <header className="topbar">
       {/* Logo */}
-      <div className="logo text-2xl font-bold text-gray-800 flex items-center gap-2">
+      <div className="logo">
         🐾 <span>PetStore</span>
       </div>
 
       {/* Search Bar */}
-      <div className="search-bar relative w-1/2">
+      <div className="search-bar">
         <input
           type="text"
           placeholder="Search for products..."
           className="search-input"
         />
-        <Search className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+        <Search size={18} />
       </div>
 
       {/* Icons */}
-      <div className="icons flex items-center gap-4">
+      <div className="icons">
         <button className="icon-btn">
           <ShoppingCart size={20} />
         </button>
         <button className="icon-btn">
           <Bell size={20} />
         </button>
-        <button className="icon-btn">
+        <button
+          className="icon-btn"
+          onClick={() => setShowProfile(!showProfile)}
+        >
           <User size={20} />
         </button>
+
+        {/* Profile Modal */}
+        {showProfile && (
+          <div className="profile-modal">
+            <Profile />
+          </div>
+        )}
       </div>
     </header>
   );
