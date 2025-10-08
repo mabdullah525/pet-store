@@ -19,7 +19,6 @@ const firebaseConfig = {
     appId: "1:617791038829:web:78c52d8cf91ce0080a6664",
 };
 
-
 // 🔥 2. Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
 const firebaseAuth = getAuth(firebaseApp);
@@ -35,6 +34,8 @@ export const useFirebase = () => useContext(FirebaseContext);
 
 // 🧩 5. Provider Component
 export const FirebaseProvider = ({ children }) => {
+    const [user, setUser] = useState(null);
+
     // ✅ Register user
     const registerUser = (email, password) =>
         firebaseCreateUserWithEmailAndPassword(firebaseAuth, email, password);
@@ -44,27 +45,56 @@ export const FirebaseProvider = ({ children }) => {
         firebaseSignInWithEmailAndPassword(firebaseAuth, email, password);
 
     // ✅ Google Sign-In
-    const signInWithGoogle = () =>
-        firebaseSignInWithPopup(firebaseAuth, googleProvider);
+    const signInWithGoogle = () => firebaseSignInWithPopup(firebaseAuth, googleProvider);
 
-
-
-    // ✅ Monitor Auth State to finf user login or not
-
-    const [user, setUser] = useState(null);
+    // ✅ Check login state
     useEffect(() => {
-        onAuthStateChanged(firebaseAuth, user => {
-            if (user) {
-                setUser(user);
-            } else {
-                setUser(null);
-            }
-        })
-    }, [])
-    const isLoggedIn = user ? true : false;
+        onAuthStateChanged(firebaseAuth, (currentUser) => {
+            setUser(currentUser || null);
+        });
+    }, []);
+
+    const isLoggedIn = !!user;
+
+    // ✅ Cloudinary Upload Function
+    const uploadImage = async (file) => {
+        if (!file) return null;
+
+        const cloudName = "dp0288fg2"; // ⚙️ apna cloud name
+        const uploadPreset = "petstore_uploads"; // ⚙️ ye Cloudinary dashboard me banana hoga
+
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", uploadPreset);
+
+        try {
+            const response = await fetch(
+                `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+                {
+                    method: "POST",
+                    body: formData,
+                }
+            );
+
+            const data = await response.json();
+            console.log("✅ Uploaded to Cloudinary:", data);
+            return data.secure_url; // image ka final URL
+        } catch (error) {
+            console.error("❌ Cloudinary Upload Error:", error);
+            return null;
+        }
+    };
+
     return (
         <FirebaseContext.Provider
-            value={{ registerUser, loginUser, signInWithGoogle, isLoggedIn }}
+            value={{
+                registerUser,
+                loginUser,
+                signInWithGoogle,
+                isLoggedIn,
+                user,
+                uploadImage, // ✅ Added here
+            }}
         >
             {children}
         </FirebaseContext.Provider>
