@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useFirebase } from "../context/Firebase.jsx";
-import { Link } from "react-router-dom"; // ✅ For navigation link
+import { Link, useNavigate } from "react-router-dom"; // ✅ For navigation link
 
 const Register = () => {
   const firebase = useFirebase();
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -33,6 +34,11 @@ const Register = () => {
       });
     }
   };
+  useEffect(() => {
+    if (firebase.isLoggedIn) {
+      navigate("/");
+    }
+  }, [firebase, navigate]);
 
   return (
     <div className="register-container">
@@ -41,11 +47,10 @@ const Register = () => {
 
         {message.text && (
           <div
-            className={`text-center p-3 mb-4 rounded-lg font-medium ${
-              message.type === "success"
+            className={`text-center p-3 mb-4 rounded-lg font-medium ${message.type === "success"
                 ? "bg-green-100 text-green-700 border border-green-400"
                 : "bg-red-100 text-red-700 border border-red-400"
-            }`}
+              }`}
           >
             {message.text}
           </div>

@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useFirebase } from "../context/Firebase.jsx";
 import { useNavigate, Link } from "react-router-dom"; // ✅ Added Link
+
 
 const Login = () => {
   const firebase = useFirebase();
@@ -8,6 +9,16 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState({ type: "", text: "" });
+
+  useEffect(() => {
+    if (firebase.isLoggedIn) {
+      navigate("/");
+    }
+  }, [firebase, navigate]);
+
+
+
+  // console.log("Firebase Context:", firebase);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -67,8 +78,8 @@ const Login = () => {
         {message.text && (
           <div
             className={`text-center p-3 mb-4 rounded-lg font-medium ${message.type === "success"
-                ? "bg-green-100 text-green-700 border border-green-400"
-                : "bg-red-100 text-red-700 border border-red-400"
+              ? "bg-green-100 text-green-700 border border-green-400"
+              : "bg-red-100 text-red-700 border border-red-400"
               }`}
           >
             {message.text}
