@@ -48,11 +48,10 @@ const Login = () => {
         {/* ✅ Message Box */}
         {message.text && (
           <div
-            className={`text-center p-3 mb-4 rounded-lg font-medium ${
-              message.type === "success"
+            className={`text-center p-3 mb-4 rounded-lg font-medium ${message.type === "success"
                 ? "bg-green-100 text-green-700 border border-green-400"
                 : "bg-red-100 text-red-700 border border-red-400"
-            }`}
+              }`}
           >
             {message.text}
           </div>

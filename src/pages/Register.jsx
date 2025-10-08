@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useFirebase } from "../context/Firebase.jsx";
+import { Link } from "react-router-dom"; // ✅ For navigation link
 
 const Register = () => {
   const firebase = useFirebase();
@@ -10,18 +11,17 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage({ type: "", text: "" }); // reset message before submit
+    setMessage({ type: "", text: "" });
 
     try {
       const result = await firebase.registerUser(email, password);
-    //   console.log("User created successfully!", result);
+      // console.log("User created successfully!", result);
 
       setMessage({
         type: "success",
         text: `🎉 Account created successfully! Welcome ${email}`,
       });
 
-      // Optional: reset input fields
       setName("");
       setEmail("");
       setPassword("");
@@ -90,6 +90,14 @@ const Register = () => {
         <button type="submit" className="submit-btn">
           Create Account
         </button>
+
+        {/* ✅ Link to Login Page */}
+        <p className="text-center mt-4 text-gray-700">
+          Already have an account?{" "}
+          <Link to="/login" className="text-blue-600 hover:underline font-medium">
+            Login here
+          </Link>
+        </p>
       </form>
     </div>
   );
