@@ -8,7 +8,6 @@ import {
     GoogleAuthProvider,
     onAuthStateChanged,
 } from "firebase/auth";
-
 import {
     getFirestore,
     collection,
@@ -55,8 +54,7 @@ export const FirebaseProvider = ({ children }) => {
         firebaseSignInWithEmailAndPassword(firebaseAuth, email, password);
 
     // ✅ Google Sign-In
-    const signInWithGoogle = () =>
-        firebaseSignInWithPopup(firebaseAuth, googleProvider);
+    const signInWithGoogle = () => firebaseSignInWithPopup(firebaseAuth, googleProvider);
 
     // ✅ Check login state
     useEffect(() => {
@@ -71,8 +69,8 @@ export const FirebaseProvider = ({ children }) => {
     const uploadImage = async (file) => {
         if (!file) return null;
 
-        const cloudName = "dp0288fg2"; // ⚙️ apna cloud name
-        const uploadPreset = "petstore_uploads"; // ⚙️ Cloudinary me banana hoga
+        const cloudName = "dp0288fg2";
+        const uploadPreset = "petstore_uploads";
 
         const formData = new FormData();
         formData.append("file", file);
@@ -96,40 +94,35 @@ export const FirebaseProvider = ({ children }) => {
         }
     };
 
-    // ✅ Add New Pet Listing to Firestore
+    // ✅ Save Pet Listing to Firestore
     const addPetListing = async (petData) => {
-        try {
-            if (!user) throw new Error("User not logged in");
+        if (!user) return false;
 
-            const docRef = await addDoc(collection(firestore, "petListings"), {
+        try {
+            await addDoc(collection(firestore, "petListings"), {
                 ...petData,
                 userId: user.uid,
                 createdAt: new Date(),
             });
-
-            console.log("🐾 Pet Listing Added:", docRef.id);
             return true;
         } catch (error) {
-            console.error("❌ Error adding pet listing:", error);
+            console.error("❌ Firestore Add Error:", error);
             return false;
         }
     };
 
-    // ✅ Fetch All Pets (for Dashboard)
-    const getAllPets = async () => {
-        const snapshot = await getDocs(collection(firestore, "petListings"));
-        return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-    };
-
-    // ✅ Fetch Pets by Logged-in User (for My Listings)
-    const getMyPets = async () => {
+    // ✅ Get Pet Listings by Logged In User
+    const getMyListings = async () => {
         if (!user) return [];
         const q = query(
             collection(firestore, "petListings"),
             where("userId", "==", user.uid)
         );
-        const snapshot = await getDocs(q);
-        return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        const querySnapshot = await getDocs(q);
+        return querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+        }));
     };
 
     return (
@@ -142,8 +135,7 @@ export const FirebaseProvider = ({ children }) => {
                 user,
                 uploadImage,
                 addPetListing,
-                getAllPets,
-                getMyPets,
+                getMyListings,
             }}
         >
             {children}

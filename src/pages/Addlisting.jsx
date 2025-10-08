@@ -1,15 +1,46 @@
 import React, { useState } from "react";
+import { useFirebase } from "../context/Firebase.jsx";
 
-const Addlisting = () => {
+const AddListing = () => {
+  const { uploadImage, addPetListing } = useFirebase();
+
   const [petName, setPetName] = useState("");
   const [breed, setBreed] = useState("");
   const [price, setPrice] = useState("");
   const [image, setImage] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log({ petName, breed, price, description, image });
-    alert("🐾 Listing added successfully!");
+    setLoading(true);
+
+    try {
+      // 1️⃣ Upload image to Cloudinary
+      const imageUrl = await uploadImage(image);
+
+      // 2️⃣ Add to Firestore
+      const success = await addPetListing({
+        petName,
+        breed,
+        price,
+        imageUrl,
+      });
+
+      if (success) {
+        alert("🐾 Pet Listing Added Successfully!");
+        setPetName("");
+        setBreed("");
+        setPrice("");
+        setImage(null);
+      } else {
+        alert("❌ Failed to add listing!");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong!");
+    }
+
+    setLoading(false);
   };
 
   return (
@@ -50,12 +81,12 @@ const Addlisting = () => {
           required
         />
 
-        <button type="submit" className="form-button">
-          Add Listing
+        <button type="submit" className="form-button" disabled={loading}>
+          {loading ? "Uploading..." : "Add Listing"}
         </button>
       </form>
     </div>
   );
 };
 
-export default Addlisting;
+export default AddListing;
