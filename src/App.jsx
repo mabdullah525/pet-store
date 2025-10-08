@@ -1,25 +1,37 @@
-import React from 'react'
-import { Route, Routes } from 'react-router-dom'
+import React from 'react';
+import { Route, Routes } from 'react-router-dom';
+
 // Pages
-import Register from './pages/Register.jsx'
-import Login from './pages/login.jsx'
+import Register from './pages/Register.jsx';
+import Login from './pages/Login.jsx';
+import Dashboard from './pages/Dashboard.jsx';
 
 // Components
-import Topbar from './components/Topbar.jsx'
-import Sidebar from './components/Sidebar.jsx'
+import Topbar from './components/Topbar.jsx';
+import Sidebar from './components/Sidebar.jsx';
 
 const App = () => {
   return (
-    <div>
-      <Topbar />
+    <div className="flex min-h-screen bg-gray-50">
+      {/* ✅ Sidebar (left side) */}
       <Sidebar />
-      <Routes>
-        <Route path='/' element={<h1>Hello World</h1>} />
-        <Route path='/register' element={<Register />} />
-        <Route path='/login' element={<Login />} />
-      </Routes>
-    </div>
-  )
-}
 
-export default App
+      {/* ✅ Main Area */}
+      <div className="flex-1 flex flex-col">
+        {/* ✅ Topbar (top of content area) */}
+        <Topbar />
+
+        {/* ✅ Page content */}
+        <main className="p-6 flex-1">
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+          </Routes>
+        </main>
+      </div>
+    </div>
+  );
+};
+
+export default App;
