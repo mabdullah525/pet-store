@@ -1,10 +1,22 @@
 import React from "react";
 import { useFirebase } from "../context/Firebase";
+import { useNavigate, Navigate } from "react-router-dom";
 
 const Profile = () => {
     const { user, logoutUser } = useFirebase();
+    const navigate = useNavigate();
 
     if (!user) return <p>Please login to view your profile.</p>;
+
+    const handleLogout = async () => {
+        await logoutUser(); // logout + user state clear
+        navigate("/");      // login page par redirect
+    };
+    const ProtectedRoute = ({ children }) => {
+        const { isLoggedIn } = useFirebase();
+        if (!isLoggedIn) return <Navigate to="/" replace />;
+        return children;
+    };
 
     return (
         <div className="profile-card p-4 bg-white rounded shadow-md w-80">
@@ -19,11 +31,12 @@ const Profile = () => {
             <p><strong>Name:</strong> {user.displayName || "N/A"}</p>
             <p><strong>Email:</strong> {user.email}</p>
             <button
-                onClick={logoutUser}
+                onClick={handleLogout}
                 className="mt-3 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
             >
                 Logout
             </button>
+
         </div>
     );
 };
