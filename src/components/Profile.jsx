@@ -18,7 +18,6 @@ const Profile = () => {
             )}
             <p><strong>Name:</strong> {user.displayName || "N/A"}</p>
             <p><strong>Email:</strong> {user.email}</p>
-            <p><strong>UID:</strong> {user.uid}</p>
             <button
                 onClick={logoutUser}
                 className="mt-3 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"

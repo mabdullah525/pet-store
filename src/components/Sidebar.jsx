@@ -34,12 +34,6 @@ const Sidebar = () => {
           </NavLink>
         ))}
       </nav>
-
-      {/* ✅ Logout Button */}
-      <button className="logout-btn">
-        <LogOut size={20} />
-        <span>Logout</span>
-      </button>
     </aside>
   );
 };
