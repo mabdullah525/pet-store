@@ -18,37 +18,44 @@ import Profile from "./components/profile.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 const App = () => {
-  const { user, userRole } = useFirebase();  // ✅ move this INSIDE component
+  const { user, userRole } = useFirebase();
   const location = useLocation();
 
+  // 🔹 Hide layout on login/register
   const hideLayout =
     location.pathname === "/login" || location.pathname === "/register";
 
+  // 🔹 Check if it's a buyer or seller
+  const isSeller = userRole === "seller";
+  const isBuyer = userRole === "buyer";
+
   return (
     <div className="flex min-h-screen bg-gray-50">
-      {!hideLayout && user && <Sidebar />}
+      {/* 🔸 Seller Layout */}
+      {!hideLayout && isSeller && user && <Sidebar />}
+
       <div className="flex-1 flex flex-col">
-        {!hideLayout && user && <Topbar />}
+        {!hideLayout && isSeller && user && <Topbar />}
 
         <Routes>
+          {/* Public Routes */}
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
 
+          {/* Seller Routes */}
           <Route
             path="/"
             element={
               <ProtectedRoute>
-                {/* ✅ Role check properly */}
-                {userRole === "seller" ? <Dashboard /> : <BuyerDashboard />}
+                {isSeller ? <Dashboard /> : <BuyerDashboard />}
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/add-listing"
             element={
               <ProtectedRoute>
-                <Addlisting />
+                {isSeller ? <Addlisting /> : <BuyerDashboard />}
               </ProtectedRoute>
             }
           />
@@ -56,10 +63,12 @@ const App = () => {
             path="/my-listings"
             element={
               <ProtectedRoute>
-                <Mylisting />
+                {isSeller ? <Mylisting /> : <BuyerDashboard />}
               </ProtectedRoute>
             }
           />
+
+          {/* Buyer Routes */}
           <Route
             path="/buyer-dashboard"
             element={
@@ -76,6 +85,8 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+
+          {/* Common */}
           <Route
             path="/profile"
             element={

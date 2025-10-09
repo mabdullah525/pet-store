@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useFirebase } from "../context/Firebase.jsx";
 
+
 const AddListing = () => {
   const { uploadImage, addPetListing } = useFirebase();
 
@@ -20,16 +21,14 @@ const AddListing = () => {
     setLoading(true);
 
     try {
-      // 1️⃣ Upload image to Cloudinary
       const imageUrl = await uploadImage(image);
 
       if (!imageUrl) {
-        alert("❌ Image upload failed! Check Cloudinary preset.");
+        alert("❌ Image upload failed!");
         setLoading(false);
         return;
       }
 
-      // 2️⃣ Add pet listing to Firestore
       const success = await addPetListing({
         petName,
         breed,
@@ -47,7 +46,7 @@ const AddListing = () => {
         alert("❌ Failed to add listing!");
       }
     } catch (err) {
-      console.error("❌ Error in handleSubmit:", err);
+      console.error(err);
       alert("❌ Something went wrong!");
     }
 
@@ -55,16 +54,16 @@ const AddListing = () => {
   };
 
   return (
-    <div className="form-container">
-      <h2 className="form-title">🐕 Add New Pet Listing</h2>
+    <div className="addListing-container">
+      <h2 className="addListing-title">🐕 Add New Pet Listing</h2>
 
-      <form onSubmit={handleSubmit} className="form">
+      <form onSubmit={handleSubmit} className="addListing-form">
         <input
           type="text"
           placeholder="Pet Name"
           value={petName}
           onChange={(e) => setPetName(e.target.value)}
-          className="form-input"
+          className="addListing-input"
           required
         />
         <input
@@ -72,7 +71,7 @@ const AddListing = () => {
           placeholder="Breed"
           value={breed}
           onChange={(e) => setBreed(e.target.value)}
-          className="form-input"
+          className="addListing-input"
           required
         />
         <input
@@ -80,18 +79,18 @@ const AddListing = () => {
           placeholder="Price"
           value={price}
           onChange={(e) => setPrice(e.target.value)}
-          className="form-input"
+          className="addListing-input"
           required
         />
         <input
           type="file"
           accept="image/*"
           onChange={(e) => setImage(e.target.files[0])}
-          className="form-input"
+          className="addListing-input"
           required
         />
 
-        <button type="submit" className="form-button" disabled={loading}>
+        <button type="submit" className="addListing-button" disabled={loading}>
           {loading ? "Uploading..." : "Add Listing"}
         </button>
       </form>

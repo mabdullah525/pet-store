@@ -231,6 +231,7 @@ export const FirebaseProvider = ({ children }) => {
     return (
         <FirebaseContext.Provider
             value={{
+                firestore,
                 registerUser,
                 loginUser,
                 signInWithGoogle,

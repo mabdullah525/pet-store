@@ -99,30 +99,29 @@
 }
 
 /* AddListing.css */
-
-.form-container {
-  @apply p-6 max-w-2xl mx-auto bg-white shadow-md rounded-lg mt-6;
+.addListing-container {
+  @apply min-h-screen bg-gray-50 flex flex-col items-center py-10;
 }
 
-.form-title {
-  @apply text-2xl font-bold mb-4 text-center text-indigo-600;
+.addListing-title {
+  @apply text-3xl font-bold text-gray-800 mb-8 text-center;
 }
 
-.form {
-  @apply space-y-4;
+.addListing-form {
+  @apply bg-white shadow-lg rounded-2xl p-8 w-11/12 max-w-md flex flex-col gap-4;
 }
 
-.form-input {
-  @apply w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-indigo-400 outline-none;
+.addListing-input {
+  @apply border border-gray-300 rounded-xl px-4 py-3 text-gray-700 
+  focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200;
 }
 
-.form-textarea {
-  @apply w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-indigo-400 outline-none;
+.addListing-button {
+  @apply bg-indigo-600 text-white font-semibold py-3 rounded-xl 
+  hover:bg-indigo-700 transition duration-300 
+  disabled:opacity-60 disabled:cursor-not-allowed;
 }
 
-.form-button {
-  @apply w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition;
-}
 /* ----------------- Topbar ----------------- */
 .topbar {
   @apply flex items-center justify-between px-6 py-4 bg-white shadow-md sticky top-0 z-40;
@@ -165,6 +164,167 @@
   from { opacity: 0; transform: translateY(-10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* ===== Buyer Dashboard Styles ===== */
+.buyer-dashboard {
+  min-height: 100vh;
+  background-color: #f9fafb;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2.5rem 1rem;
+}
+
+/* Header */
+.buyer-header {
+  background: white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  width: 90%;
+  max-width: 700px;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.buyer-header h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.buyer-header p {
+  color: #4b5563;
+}
+
+.buyer-header span {
+  font-weight: 600;
+}
+
+/* Browse Button */
+.browse-btn {
+  background-color: #6366f1;
+  color: white;
+  font-weight: 600;
+  padding: 0.75rem 2rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  margin-bottom: 2rem;
+}
+
+.browse-btn:hover {
+  background-color: #4f46e5;
+  transform: translateY(-2px);
+}
+
+/* Orders Section */
+.orders-section {
+  width: 90%;
+  max-width: 900px;
+  background: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  border-radius: 1rem;
+  padding: 1.5rem;
+}
+
+.orders-section h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+/* Orders Grid */
+.orders-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Order Card */
+.order-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 1rem;
+  padding: 1rem;
+  background-color: #f9fafb;
+  transition: all 0.3s ease;
+}
+
+.order-card:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  transform: translateY(-3px);
+}
+
+.order-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.order-card h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.order-card p {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.no-orders {
+  text-align: center;
+  color: #9ca3af;
+  font-size: 1rem;
+  padding: 2rem 0;
+}
+.allPets-container {
+  @apply min-h-screen bg-gray-50 py-10 flex flex-col items-center;
+}
+
+.allPets-title {
+  @apply text-3xl font-bold text-gray-800 mb-8;
+}
+
+.allPets-loading,
+.allPets-empty {
+  @apply text-gray-600 text-lg;
+}
+
+.allPets-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-11/12 max-w-6xl;
+}
+
+.allPets-card {
+  @apply bg-white rounded-2xl shadow-md overflow-hidden transition-all hover:shadow-lg hover:scale-[1.02];
+}
+
+.allPets-image {
+  @apply w-full h-56 object-cover;
+}
+
+.allPets-details {
+  @apply p-4;
+}
+
+.allPets-name {
+  @apply text-xl font-semibold text-gray-800;
+}
+
+.allPets-breed {
+  @apply text-gray-600;
+}
+
+.allPets-price {
+  @apply text-indigo-600 font-bold mt-2;
+}
+
+
 
 
 
