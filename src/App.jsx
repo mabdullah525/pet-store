@@ -63,6 +63,8 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+          <Route path="/buyer-dashboard" element={<BuyerDashboard />} />
+
           <Route
             path="/profile"
             element={

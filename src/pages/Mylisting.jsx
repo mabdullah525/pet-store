@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useFirebase } from "../context/Firebase.jsx";
 
-
-
 const MyListings = () => {
-  const { getMyListings, user } = useFirebase();
+  const { getMyListings, user, addOrder } = useFirebase();
   const [pets, setPets] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  
+  const [buying, setBuying] = useState(null);
 
   useEffect(() => {
     const fetchListings = async () => {
@@ -20,6 +17,23 @@ const MyListings = () => {
     };
     fetchListings();
   }, [user, getMyListings]);
+
+  // ✅ Handle Buy Button Click
+  const handleBuy = async (pet) => {
+    setBuying(pet.id);
+    const success = await addOrder({
+      petName: pet.petName,
+      petImage: pet.imageUrl,
+      price: pet.price,
+      sellerId: pet.userId,
+    });
+    setBuying(null);
+    if (success) {
+      alert("🎉 Pet purchased successfully!");
+    } else {
+      alert("❌ Something went wrong while buying.");
+    }
+  };
 
   if (loading) {
     return (
@@ -59,6 +73,18 @@ const MyListings = () => {
             <p className="text-blue-600 font-semibold mt-2">
               💰 Rs {pet.price}
             </p>
+
+            {/* 🛒 Buy Button */}
+            <button
+              onClick={() => handleBuy(pet)}
+              disabled={buying === pet.id}
+              className={`mt-4 w-full py-2 rounded-lg text-white font-semibold transition-all ${buying === pet.id
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-green-500 hover:bg-green-600"
+                }`}
+            >
+              {buying === pet.id ? "Processing..." : "Buy Now 🛍️"}
+            </button>
           </div>
         ))}
       </div>

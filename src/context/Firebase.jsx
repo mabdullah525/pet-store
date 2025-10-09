@@ -115,6 +115,37 @@ export const FirebaseProvider = ({ children }) => {
             return [];
         }
     };
+    // ✅ Get orders of current buyer
+    const getMyOrders = async () => {
+        if (!user) return [];
+
+        const q = query(
+            collection(firestore, "orders"),
+            where("buyerId", "==", user.uid)
+        );
+        const querySnapshot = await getDocs(q);
+        return querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+        }));
+    };
+    // ✅ Add New Order (Buyer)
+    const addOrder = async (orderData) => {
+        if (!user) return false;
+        try {
+            await addDoc(collection(firestore, "orders"), {
+                ...orderData,
+                buyerId: user.uid,
+                createdAt: new Date(),
+            });
+            return true;
+        } catch (error) {
+            console.error("❌ Order Save Error:", error);
+            return false;
+        }
+    };
+
+
 
     return (
         <FirebaseContext.Provider
@@ -128,6 +159,9 @@ export const FirebaseProvider = ({ children }) => {
                 uploadImage,
                 addPetListing,
                 getMyListings,
+                getMyOrders,
+                addOrder,
+
             }}
         >
             {children}
