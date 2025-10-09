@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useFirebase } from "../context/Firebase";
+import { useFirebase } from "../../context/Firebase.jsx";
 import { Link } from "react-router-dom";
 
 const BuyerDashboard = () => {

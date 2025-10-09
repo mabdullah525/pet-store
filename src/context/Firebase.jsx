@@ -9,9 +9,19 @@ import {
     onAuthStateChanged,
     signOut,
 } from "firebase/auth";
-import { getFirestore, collection, addDoc, getDocs, query, where } from "firebase/firestore";
+import {
+    getFirestore,
+    collection,
+    addDoc,
+    getDocs,
+    query,
+    where,
+    doc,
+    getDoc,
+    setDoc,
+} from "firebase/firestore";
 
-// Firebase Config
+// 🔹 Firebase Config
 const firebaseConfig = {
     apiKey: "AIzaSyDtt_A4Eh77N_Ah4abTak6CRqDEIUFOOX8",
     authDomain: "pet-store-9190c.firebaseapp.com",
@@ -31,35 +41,75 @@ export const useFirebase = () => useContext(FirebaseContext);
 
 export const FirebaseProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const [userRole, setUserRole] = useState(null); // ✅ buyer/seller role
 
-    // Monitor user state
+    // 🔹 Monitor user state
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(firebaseAuth, (currentUser) => {
-            setUser(currentUser || null);
+        const unsubscribe = onAuthStateChanged(firebaseAuth, async (currentUser) => {
+            if (currentUser) {
+                setUser(currentUser);
+
+                // 🔹 Firestore se role check karo
+                const docRef = doc(firestore, "users", currentUser.uid);
+                const userDoc = await getDoc(docRef);
+                if (userDoc.exists()) {
+                    setUserRole(userDoc.data().role);
+                } else {
+                    setUserRole(null);
+                }
+            } else {
+                setUser(null);
+                setUserRole(null);
+            }
         });
         return () => unsubscribe();
     }, []);
 
     const isLoggedIn = !!user;
 
-    // Auth functions
-    const registerUser = (email, password) =>
-        createUserWithEmailAndPassword(firebaseAuth, email, password);
-    const loginUser = (email, password) =>
-        signInWithEmailAndPassword(firebaseAuth, email, password);
+    // 🔹 Register with role
+    const registerUser = async (email, password, role = "buyer") => {
+        const res = await createUserWithEmailAndPassword(firebaseAuth, email, password);
+        const uid = res.user.uid;
+
+        // ✅ Save role in Firestore
+        await setDoc(doc(firestore, "users", uid), {
+            email,
+            role,
+            createdAt: new Date(),
+        });
+
+        setUserRole(role);
+        return res;
+    };
+
+    // 🔹 Login with role check
+    const loginUser = async (email, password) => {
+        const res = await signInWithEmailAndPassword(firebaseAuth, email, password);
+        const uid = res.user.uid;
+
+        const docRef = doc(firestore, "users", uid);
+        const userDoc = await getDoc(docRef);
+        if (userDoc.exists()) {
+            setUserRole(userDoc.data().role);
+        }
+
+        return res;
+    };
+
     const signInWithGoogle = () => signInWithPopup(firebaseAuth, googleProvider);
 
     const logoutUser = async () => {
         try {
             await signOut(firebaseAuth);
-            setUser(null); // 🔹 ye zaruri hai taake React state update ho
+            setUser(null);
+            setUserRole(null);
         } catch (error) {
             console.error("Logout failed:", error);
         }
     };
 
-
-    // Cloudinary upload
+    // 🔹 Cloudinary upload
     const uploadImage = async (file) => {
         if (!file) return null;
         const cloudName = "dp0288fg2";
@@ -86,7 +136,7 @@ export const FirebaseProvider = ({ children }) => {
         }
     };
 
-    // Firestore: add pet listing
+    // 🔹 Firestore: add pet listing
     const addPetListing = async (petData) => {
         if (!user) return false;
         if (!petData.imageUrl) return false;
@@ -103,7 +153,7 @@ export const FirebaseProvider = ({ children }) => {
         }
     };
 
-    // Firestore: get user listings
+    // 🔹 Firestore: get seller listings
     const getMyListings = async () => {
         if (!user) return [];
         try {
@@ -115,21 +165,15 @@ export const FirebaseProvider = ({ children }) => {
             return [];
         }
     };
-    // ✅ Get orders of current buyer
+
+    // 🔹 Buyer orders
     const getMyOrders = async () => {
         if (!user) return [];
-
-        const q = query(
-            collection(firestore, "orders"),
-            where("buyerId", "==", user.uid)
-        );
+        const q = query(collection(firestore, "orders"), where("buyerId", "==", user.uid));
         const querySnapshot = await getDocs(q);
-        return querySnapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-        }));
+        return querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
     };
-    // ✅ Add New Order (Buyer)
+
     const addOrder = async (orderData) => {
         if (!user) return false;
         try {
@@ -145,8 +189,6 @@ export const FirebaseProvider = ({ children }) => {
         }
     };
 
-
-
     return (
         <FirebaseContext.Provider
             value={{
@@ -156,12 +198,12 @@ export const FirebaseProvider = ({ children }) => {
                 logoutUser,
                 isLoggedIn,
                 user,
+                userRole, // ✅ role added here
                 uploadImage,
                 addPetListing,
                 getMyListings,
                 getMyOrders,
                 addOrder,
-
             }}
         >
             {children}

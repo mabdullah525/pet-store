@@ -8,7 +8,8 @@ import Login from './pages/Login.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import Addlisting from './pages/Addlisting.jsx';
 import Mylisting from './pages/Mylisting.jsx';
-import BuyerDashboard from './pages/BuyerDashboard.jsx';
+import BuyerDashboard from './pages/buyer/BuyerDashboard.jsx';
+import AllPets from './pages/buyer/AllPets.jsx';
 
 // Components
 import Topbar from './components/Topbar.jsx';
@@ -63,7 +64,10 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+
+          {/* ✅ Buyer Pages */}
           <Route path="/buyer-dashboard" element={<BuyerDashboard />} />
+          <Route path="/all-pets" element={<AllPets />} />
 
           <Route
             path="/profile"
@@ -74,6 +78,16 @@ const App = () => {
             }
           />
         </Routes>
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              {user?.role === "seller" ? <Dashboard /> : <BuyerDashboard />}
+            </ProtectedRoute>
+          }
+        />
+
+
       </div>
     </div>
   );
