@@ -1,5 +1,6 @@
 import React from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
+import { useFirebase } from './context/Firebase.jsx';
 
 // Pages
 import Register from './pages/Register.jsx';
@@ -12,30 +13,64 @@ import Mylisting from './pages/Mylisting.jsx';
 import Topbar from './components/Topbar.jsx';
 import Sidebar from './components/Sidebar.jsx';
 import Profile from './components/profile.jsx';
-
+import ProtectedRoute from './components/ProtectedRoute.jsx';
 
 const App = () => {
+  const { user } = useFirebase(); // 🔹 Firebase context se user lo
+  const location = useLocation(); // 🔹 current URL path
+
+  // 🔸 ye check karega agar login/register page pe ho to sidebar/topbar hide ho
+  const hideLayout =
+    location.pathname === '/login' || location.pathname === '/register';
+
   return (
     <div className="flex min-h-screen bg-gray-50">
-      {/* ✅ Sidebar (left side) */}
-      <Sidebar />
+      {/* ✅ Sidebar sirf tab dikhaye jab user logged in ho aur login/register page na ho */}
+      {!hideLayout && user && <Sidebar />}
 
-      {/* ✅ Main Area */}
       <div className="flex-1 flex flex-col">
-        {/* ✅ Topbar (top of content area) */}
-        <Topbar />
+        {/* ✅ Topbar bhi same condition pe */}
+        {!hideLayout && user && <Topbar />}
 
-        {/* ✅ Page content */}
-        {/* <main className="p-6 flex-1"> */}
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/add-listing" element={<Addlisting />} />
-            <Route path="/my-listings" element={<Mylisting />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/profile" element={<Profile />} />
-          </Routes>
-        {/* </main> */}
+        <Routes>
+          {/* 🔹 Public routes */}
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+
+          {/* 🔹 Protected routes */}
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/add-listing"
+            element={
+              <ProtectedRoute>
+                <Addlisting />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/my-listings"
+            element={
+              <ProtectedRoute>
+                <Mylisting />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
       </div>
     </div>
   );
