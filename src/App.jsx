@@ -8,6 +8,7 @@ import Login from './pages/Login.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import Addlisting from './pages/Addlisting.jsx';
 import Mylisting from './pages/Mylisting.jsx';
+import BuyerDashboard from './pages/BuyerDashboard.jsx';
 
 // Components
 import Topbar from './components/Topbar.jsx';
