@@ -30,28 +30,6 @@ const BuyerDashboard = () => {
         🐕 Browse Pets
       </Link>
 
-      {/* Orders Section */}
-      <div className="orders-section">
-        <h2>🛒 My Orders</h2>
-
-        {orders.length === 0 ? (
-          <p className="no-orders">You haven’t placed any orders yet.</p>
-        ) : (
-          <div className="orders-grid">
-            {orders.map((order) => (
-              <div key={order.id} className="order-card">
-                <img src={order.petImage} alt={order.petName} />
-                <h3>{order.petName}</h3>
-                <p>Price: ${order.price}</p>
-                <p>
-                  Purchased on:{" "}
-                  {new Date(order.createdAt?.seconds * 1000).toLocaleDateString()}
-                </p>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
     </div>
   );
 };
