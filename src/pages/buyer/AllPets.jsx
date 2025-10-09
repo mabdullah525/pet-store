@@ -3,17 +3,19 @@ import { useFirebase } from "../../context/Firebase.jsx";
 
 
 const AllPets = () => {
-  const { user, firestore } = useFirebase();
+  const { firestore, user, addOrder } = useFirebase();
   const [pets, setPets] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [buying, setBuying] = useState(null);
 
   // 🟢 Firestore se pets fetch karna
   useEffect(() => {
     const fetchPets = async () => {
       try {
-        const snapshot = await import("firebase/firestore").then(({ getDocs, collection }) =>
-          getDocs(collection(firestore, "petListings"))
+        const snapshot = await import("firebase/firestore").then(
+          ({ getDocs, collection }) => getDocs(collection(firestore, "petListings"))
         );
+
         const fetchedPets = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
@@ -27,6 +29,40 @@ const AllPets = () => {
     };
     fetchPets();
   }, [firestore]);
+
+  // 🛒 Buy Now click handler
+  const handleBuyNow = async (pet) => {
+    if (!user) {
+      alert("Please login first to place an order 🐾");
+      return;
+    }
+
+    setBuying(pet.id);
+
+    try {
+      const success = await addOrder({
+        petId: pet.id,
+        petName: pet.petName,
+        breed: pet.breed,
+        price: pet.price,
+        imageUrl: pet.imageUrl,
+        buyerId: user.uid,
+        buyerEmail: user.email,
+        orderDate: new Date().toISOString(),
+      });
+
+      if (success) {
+        alert(`✅ You purchased ${pet.petName} successfully!`);
+      } else {
+        alert("❌ Order placement failed!");
+      }
+    } catch (err) {
+      console.error("❌ Error in handleBuyNow:", err);
+      alert("Something went wrong!");
+    }
+
+    setBuying(null);
+  };
 
   return (
     <div className="allPets-container">
@@ -49,6 +85,13 @@ const AllPets = () => {
                 <h2 className="allPets-name">{pet.petName}</h2>
                 <p className="allPets-breed">Breed: {pet.breed}</p>
                 <p className="allPets-price">Price: ${pet.price}</p>
+                <button
+                  className="buyNow-btn"
+                  onClick={() => handleBuyNow(pet)}
+                  disabled={buying === pet.id}
+                >
+                  {buying === pet.id ? "Processing..." : "Buy Now 🛒"}
+                </button>
               </div>
             </div>
           ))}

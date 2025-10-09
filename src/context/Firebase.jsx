@@ -96,7 +96,6 @@ export const FirebaseProvider = ({ children }) => {
     };
 
     // 🔹 Google Login (🔥 fixed with Firestore role)
-    // 🟢 Google Login with Role Assign
     const signInWithGoogle = async () => {
         const result = await signInWithPopup(firebaseAuth, googleProvider);
         const user = result.user;
@@ -124,6 +123,7 @@ export const FirebaseProvider = ({ children }) => {
 
         return result;
     };
+
 
 
 
@@ -201,17 +201,14 @@ export const FirebaseProvider = ({ children }) => {
         return querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
     };
 
+
+
     const addOrder = async (orderData) => {
-        if (!user) return false;
         try {
-            await addDoc(collection(firestore, "orders"), {
-                ...orderData,
-                buyerId: user.uid,
-                createdAt: new Date(),
-            });
+            await addDoc(collection(firestore, "orders"), orderData);
             return true;
         } catch (error) {
-            console.error("❌ Order Save Error:", error);
+            console.error("❌ Error adding order:", error);
             return false;
         }
     };
@@ -228,12 +225,14 @@ export const FirebaseProvider = ({ children }) => {
         }
     };
 
+
     return (
         <FirebaseContext.Provider
             value={{
                 firestore,
                 registerUser,
                 loginUser,
+                addOrder,
                 signInWithGoogle,
                 logoutUser,
                 isLoggedIn,
