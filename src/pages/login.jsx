@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useFirebase } from "../context/Firebase.jsx";
-import { useNavigate, Link } from "react-router-dom"; // ✅ Added Link
-
+import { useNavigate, Link } from "react-router-dom";
 
 const Login = () => {
   const firebase = useFirebase();
@@ -11,14 +10,18 @@ const Login = () => {
   const [message, setMessage] = useState({ type: "", text: "" });
 
   useEffect(() => {
-    if (firebase.isLoggedIn) {
-      navigate("/");
+    if (firebase.isLoggedIn && firebase.user) {
+      checkUserRole(firebase.user.uid);
     }
-  }, [firebase, navigate]);
+  }, [firebase.isLoggedIn, firebase.user]);
 
-
-
-  // console.log("Firebase Context:", firebase);
+  // 🔹 Check user role from Firestore
+  const checkUserRole = async (uid) => {
+    const role = await firebase.getUserRole(uid);
+    if (role === "seller") navigate("/");
+    else if (role === "buyer") navigate("/buyer-dashboard");
+    else navigate("/login");
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,19 +29,20 @@ const Login = () => {
 
     try {
       const result = await firebase.loginUser(email, password);
-      console.log("User logged in successfully!", result.user);
+      const loggedUser = result.user;
 
       setMessage({
         type: "success",
-        text: `🎉 Login successful! Welcome back, ${result.user.email}`,
+        text: `🎉 Login successful! Welcome back, ${loggedUser.email}`,
       });
+
+      // 🔹 Redirect based on role
+      setTimeout(async () => {
+        await checkUserRole(loggedUser.uid);
+      }, 1500);
 
       setEmail("");
       setPassword("");
-
-      setTimeout(() => {
-        navigate("/");
-      }, 2000);
     } catch (error) {
       console.error("Login failed:", error.message);
       setMessage({
@@ -52,14 +56,17 @@ const Login = () => {
   const handleGoogleLogin = async () => {
     try {
       const result = await firebase.signInWithGoogle();
-      console.log("Google login successful:", result.user);
+      const loggedUser = result.user;
 
       setMessage({
         type: "success",
-        text: `🎉 Logged in with Google as ${result.user.displayName}`,
+        text: `🎉 Logged in with Google as ${loggedUser.displayName}`,
       });
 
-      setTimeout(() => navigate("/"), 2000);
+      // 🔹 Redirect based on role
+      setTimeout(async () => {
+        await checkUserRole(loggedUser.uid);
+      }, 1500);
     } catch (error) {
       console.error("Google Sign-In failed:", error.message);
       setMessage({
@@ -74,19 +81,18 @@ const Login = () => {
       <form onSubmit={handleSubmit} className="register-form">
         <h2 className="form-title">Login To Your Account 🐾</h2>
 
-        {/* ✅ Message Box */}
         {message.text && (
           <div
-            className={`text-center p-3 mb-4 rounded-lg font-medium ${message.type === "success"
-              ? "bg-green-100 text-green-700 border border-green-400"
-              : "bg-red-100 text-red-700 border border-red-400"
-              }`}
+            className={`text-center p-3 mb-4 rounded-lg font-medium ${
+              message.type === "success"
+                ? "bg-green-100 text-green-700 border border-green-400"
+                : "bg-red-100 text-red-700 border border-red-400"
+            }`}
           >
             {message.text}
           </div>
         )}
 
-        {/* Email Field */}
         <div className="form-group">
           <label>Email</label>
           <input
@@ -98,7 +104,6 @@ const Login = () => {
           />
         </div>
 
-        {/* Password Field */}
         <div className="form-group">
           <label>Password</label>
           <input
@@ -110,15 +115,14 @@ const Login = () => {
           />
         </div>
 
-        {/* Submit Button */}
         <button type="submit" className="submit-btn">
           Login
         </button>
 
-        {/* ✅ Google Login Button */}
+        {/* ✅ Google Login */}
         <button
           type="button"
-          onClick={firebase.signInWithGoogle}
+          onClick={handleGoogleLogin}
           className="cursor-pointer google-btn mt-3 flex items-center justify-center gap-2 border border-gray-300 rounded-lg py-3 w-full hover:bg-gray-100 transition"
         >
           <img
@@ -129,10 +133,12 @@ const Login = () => {
           <span>Sign in with Google</span>
         </button>
 
-        {/* ✅ Register Link */}
         <p className="text-center mt-4 text-gray-700">
           Don’t have an account?{" "}
-          <Link to="/register" className="text-blue-600 hover:underline font-medium">
+          <Link
+            to="/register"
+            className="text-blue-600 hover:underline font-medium"
+          >
             Register here
           </Link>
         </p>

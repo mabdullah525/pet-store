@@ -41,21 +41,20 @@ export const useFirebase = () => useContext(FirebaseContext);
 
 export const FirebaseProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-    const [userRole, setUserRole] = useState(null); // ✅ buyer/seller role
+    const [userRole, setUserRole] = useState(null);
 
-    // 🔹 Monitor user state
+    // 🔹 Auth state listener
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(firebaseAuth, async (currentUser) => {
             if (currentUser) {
                 setUser(currentUser);
-
-                // 🔹 Firestore se role check karo
+                // 🔹 Role check karo Firestore se
                 const docRef = doc(firestore, "users", currentUser.uid);
                 const userDoc = await getDoc(docRef);
                 if (userDoc.exists()) {
                     setUserRole(userDoc.data().role);
                 } else {
-                    setUserRole(null);
+                    setUserRole("buyer"); // default
                 }
             } else {
                 setUser(null);
@@ -67,12 +66,11 @@ export const FirebaseProvider = ({ children }) => {
 
     const isLoggedIn = !!user;
 
-    // 🔹 Register with role
+    // 🔹 Register (Email/Password)
     const registerUser = async (email, password, role = "buyer") => {
         const res = await createUserWithEmailAndPassword(firebaseAuth, email, password);
         const uid = res.user.uid;
 
-        // ✅ Save role in Firestore
         await setDoc(doc(firestore, "users", uid), {
             email,
             role,
@@ -83,7 +81,7 @@ export const FirebaseProvider = ({ children }) => {
         return res;
     };
 
-    // 🔹 Login with role check
+    // 🔹 Login (Email/Password)
     const loginUser = async (email, password) => {
         const res = await signInWithEmailAndPassword(firebaseAuth, email, password);
         const uid = res.user.uid;
@@ -97,15 +95,46 @@ export const FirebaseProvider = ({ children }) => {
         return res;
     };
 
-    const signInWithGoogle = () => signInWithPopup(firebaseAuth, googleProvider);
+    // 🔹 Google Login (🔥 fixed with Firestore role)
+    // 🟢 Google Login with Role Assign
+    const signInWithGoogle = async () => {
+        const result = await signInWithPopup(firebaseAuth, googleProvider);
+        const user = result.user;
 
+        const userRef = doc(firestore, "users", user.uid);
+        const userDoc = await getDoc(userRef);
+
+        if (!userDoc.exists()) {
+            // 🟢 agar naya user hai:
+            // ✅ tumhara Gmail → seller, baki sab → buyer
+            const role =
+                user.email === "muhammadabdullahweb005@gmail.com" ? "seller" : "buyer";
+
+            await setDoc(userRef, {
+                email: user.email,
+                role,
+                createdAt: new Date(),
+            });
+
+            setUserRole(role);
+        } else {
+            // agar pehle se exist karta hai to role Firestore se lo
+            setUserRole(userDoc.data().role);
+        }
+
+        return result;
+    };
+
+
+
+    // 🔹 Logout
     const logoutUser = async () => {
         try {
             await signOut(firebaseAuth);
             setUser(null);
             setUserRole(null);
         } catch (error) {
-            console.error("Logout failed:", error);
+            console.error("❌ Logout failed:", error);
         }
     };
 
@@ -136,10 +165,9 @@ export const FirebaseProvider = ({ children }) => {
         }
     };
 
-    // 🔹 Firestore: add pet listing
+    // 🔹 Seller listings
     const addPetListing = async (petData) => {
-        if (!user) return false;
-        if (!petData.imageUrl) return false;
+        if (!user || !petData.imageUrl) return false;
         try {
             await addDoc(collection(firestore, "petListings"), {
                 ...petData,
@@ -153,7 +181,6 @@ export const FirebaseProvider = ({ children }) => {
         }
     };
 
-    // 🔹 Firestore: get seller listings
     const getMyListings = async () => {
         if (!user) return [];
         try {
@@ -166,7 +193,7 @@ export const FirebaseProvider = ({ children }) => {
         }
     };
 
-    // 🔹 Buyer orders
+    // 🔹 Buyer Orders
     const getMyOrders = async () => {
         if (!user) return [];
         const q = query(collection(firestore, "orders"), where("buyerId", "==", user.uid));
@@ -189,6 +216,18 @@ export const FirebaseProvider = ({ children }) => {
         }
     };
 
+    // 🔹 Get user role (for external use)
+    const getUserRole = async (uid) => {
+        try {
+            const docRef = doc(firestore, "users", uid);
+            const userDoc = await getDoc(docRef);
+            return userDoc.exists() ? userDoc.data().role : null;
+        } catch (error) {
+            console.error("❌ Error getting user role:", error);
+            return null;
+        }
+    };
+
     return (
         <FirebaseContext.Provider
             value={{
@@ -198,15 +237,17 @@ export const FirebaseProvider = ({ children }) => {
                 logoutUser,
                 isLoggedIn,
                 user,
-                userRole, // ✅ role added here
+                userRole, // 🟢 ye line zaroor honi chahiye
                 uploadImage,
                 addPetListing,
                 getMyListings,
                 getMyOrders,
                 addOrder,
+                getUserRole,
             }}
         >
             {children}
         </FirebaseContext.Provider>
+
     );
 };

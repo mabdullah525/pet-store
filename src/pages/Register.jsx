@@ -9,7 +9,7 @@ const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("buyer"); // 🟢 NEW: Default role
+  const [role, setRole] = useState("buyer");
   const [message, setMessage] = useState({ type: "", text: "" });
 
   const handleSubmit = async (e) => {
@@ -17,20 +17,21 @@ const Register = () => {
     setMessage({ type: "", text: "" });
 
     try {
-      // 🟢 Pass role to Firebase context
-      const result = await firebase.registerUser(email, password, role);
+      // ✅ Register user and save role to Firestore
+      await firebase.registerUser(email, password, role);
 
       setMessage({
         type: "success",
         text: `🎉 Account created successfully as a ${role}!`,
       });
 
+      // Reset fields
       setName("");
       setEmail("");
       setPassword("");
       setRole("buyer");
 
-      // 🟢 Redirect after success
+      // Redirect to login after short delay
       setTimeout(() => navigate("/login"), 1500);
     } catch (error) {
       console.error("Error creating user:", error.message);
@@ -49,7 +50,10 @@ const Register = () => {
 
   return (
     <div className="register-container flex items-center justify-center min-h-screen bg-gray-100">
-      <form onSubmit={handleSubmit} className="register-form bg-white shadow-lg rounded-xl p-8 w-96">
+      <form
+        onSubmit={handleSubmit}
+        className="register-form bg-white shadow-lg rounded-xl p-8 w-96"
+      >
         <h2 className="form-title text-2xl font-bold mb-6 text-center text-gray-800">
           Create Your Account 🐾
         </h2>
@@ -66,6 +70,7 @@ const Register = () => {
           </div>
         )}
 
+        {/* Full Name */}
         <div className="form-group mb-3">
           <label className="block mb-1 font-medium text-gray-700">Name</label>
           <input
@@ -78,6 +83,7 @@ const Register = () => {
           />
         </div>
 
+        {/* Email */}
         <div className="form-group mb-3">
           <label className="block mb-1 font-medium text-gray-700">Email</label>
           <input
@@ -90,8 +96,11 @@ const Register = () => {
           />
         </div>
 
+        {/* Password */}
         <div className="form-group mb-3">
-          <label className="block mb-1 font-medium text-gray-700">Password</label>
+          <label className="block mb-1 font-medium text-gray-700">
+            Password
+          </label>
           <input
             type="password"
             placeholder="Enter password"
@@ -102,9 +111,11 @@ const Register = () => {
           />
         </div>
 
-        {/* 🟢 Role selection dropdown */}
+        {/* Role Dropdown */}
         <div className="form-group mb-4">
-          <label className="block mb-1 font-medium text-gray-700">Select Role</label>
+          <label className="block mb-1 font-medium text-gray-700">
+            Select Role
+          </label>
           <select
             value={role}
             onChange={(e) => setRole(e.target.value)}
@@ -115,6 +126,7 @@ const Register = () => {
           </select>
         </div>
 
+        {/* Submit */}
         <button
           type="submit"
           className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"
@@ -124,7 +136,10 @@ const Register = () => {
 
         <p className="text-center mt-4 text-gray-700">
           Already have an account?{" "}
-          <Link to="/login" className="text-blue-600 hover:underline font-medium">
+          <Link
+            to="/login"
+            className="text-blue-600 hover:underline font-medium"
+          >
             Login here
           </Link>
         </p>
