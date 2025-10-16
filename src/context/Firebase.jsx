@@ -39,6 +39,7 @@ const firestore = getFirestore(firebaseApp);
 const googleProvider = new GoogleAuthProvider();
 
 const FirebaseContext = createContext(null);
+// eslint-disable-next-line react-refresh/only-export-components
 export const useFirebase = () => useContext(FirebaseContext);
 
 export const FirebaseProvider = ({ children }) => {
@@ -218,13 +219,30 @@ export const FirebaseProvider = ({ children }) => {
   };
 
   // 🔹 Create Order (Buy Now)
+  // 🔹 Create Order (Buy Now)
   const createOrder = async (orderData) => {
     try {
+      // 🔸 1. sellerId nikal lo petListing se
+      const petRef = doc(firestore, "petListings", orderData.petId);
+      const petDoc = await getDoc(petRef);
+
+      if (!petDoc.exists()) {
+        alert("❌ Pet listing not found!");
+        return false;
+      }
+
+      const sellerId = petDoc.data().userId; // seller ka UID
+      const sellerEmail = petDoc.data().sellerEmail || "Unknown";
+
+      // 🔸 2. order add karo Firestore main
       await addDoc(collection(firestore, "orders"), {
         ...orderData,
+        sellerId,
+        sellerEmail,
         status: "pending",
         createdAt: serverTimestamp(),
       });
+
       alert("✅ Order placed successfully! 🐾");
       return true;
     } catch (error) {
@@ -232,6 +250,7 @@ export const FirebaseProvider = ({ children }) => {
       return false;
     }
   };
+
 
   // 🔹 Get User Role
   const getUserRole = async (uid) => {

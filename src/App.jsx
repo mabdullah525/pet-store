@@ -12,6 +12,7 @@ import BuyerDashboard from "./pages/buyer/BuyerDashboard.jsx";
 import AllPets from "./pages/buyer/AllPets.jsx";
 import BuyerNavbar from "./pages/buyer/BuyerNavbar.jsx";
 import MyOrders from "./pages/buyer/Cart.jsx";
+import SellerOrder from "./pages/SellerOrder.jsx";
 
 // Components
 import Topbar from "./components/Topbar.jsx";
@@ -29,7 +30,6 @@ const App = () => {
 
   // 🔹 Check if it's a buyer or seller
   const isSeller = userRole === "seller";
-  const isBuyer = userRole === "buyer";
 
   return (
     <div className="flex min-h-screen bg-gray-50">
@@ -66,6 +66,14 @@ const App = () => {
             element={
               <ProtectedRoute>
                 {isSeller ? <Mylisting /> : <BuyerDashboard />}
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/seller-orders"
+            element={
+              <ProtectedRoute>
+                <SellerOrder />
               </ProtectedRoute>
             }
           />

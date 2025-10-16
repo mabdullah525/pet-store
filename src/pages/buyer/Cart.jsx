@@ -55,8 +55,6 @@ const Cart = () => {
         imageUrl: item.imageUrl,
         buyerId: user.uid,
         buyerEmail: user.email,
-        orderDate: new Date().toISOString(),
-        status: "pending",
       });
 
       // Remove from cart after purchase
