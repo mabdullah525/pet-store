@@ -129,7 +129,7 @@ const AllPets = () => {
                         : "Add to Cart 🛍️"}
                     </button>
 
-                    <button
+                    {/* <button
                       className="buyNow-btn"
                       onClick={() => handleBuyNow(pet)}
                       disabled={processing === pet.id}
@@ -137,7 +137,7 @@ const AllPets = () => {
                       {processing === pet.id
                         ? "Processing..."
                         : "Buy Now 🛒"}
-                    </button>
+                    </button> */}
                   </div>
                 </div>
               </div>
