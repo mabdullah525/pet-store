@@ -13,16 +13,6 @@ const Topbar = () => {
         🐾 <span>PetStore</span>
       </div>
 
-      {/* Search Bar */}
-      <div className="search-bar">
-        <input
-          type="text"
-          placeholder="Search for products..."
-          className="search-input"
-        />
-        <Search size={18} />
-      </div>
-
       {/* Icons */}
       <div className="icons">
         <button className="icon-btn">
