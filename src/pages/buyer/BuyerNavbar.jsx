@@ -48,7 +48,7 @@ const BuyerNavbar = () => {
             isActive ? "text-blue-600 font-semibold" : "hover:text-blue-600"
           }
         >
-          My Orders
+          Cart
         </NavLink>
       </div>
 

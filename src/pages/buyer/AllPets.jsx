@@ -116,7 +116,7 @@ const AllPets = () => {
                 <div className="allPets-details">
                   <h2 className="allPets-name">{pet.petName}</h2>
                   <p className="allPets-breed">Breed: {pet.breed}</p>
-                  <p className="allPets-price">Price: ${pet.price}</p>
+                  <p className="allPets-price">Price: Rs.{pet.price}</p>
 
                   <div className="allPets-btn-group">
                     <button
