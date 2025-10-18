@@ -11,7 +11,6 @@ import Mylisting from "./pages/Mylisting.jsx";
 import BuyerDashboard from "./pages/buyer/BuyerDashboard.jsx";
 import AllPets from "./pages/buyer/AllPets.jsx";
 import BuyerNavbar from "./pages/buyer/BuyerNavbar.jsx";
-import MyOrders from "./pages/buyer/Cart.jsx";
 import SellerOrder from "./pages/SellerOrder.jsx";
 
 // Components
@@ -19,7 +18,7 @@ import Topbar from "./components/Topbar.jsx";
 import Sidebar from "./components/Sidebar.jsx";
 import Profile from "./components/profile.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
-
+import CartDrawer from "./components/CartDrawer.jsx";
 const App = () => {
   const { user, userRole } = useFirebase();
   const location = useLocation();
@@ -53,6 +52,7 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+
           <Route
             path="/add-listing"
             element={
@@ -95,7 +95,7 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-          <Route path="/my-orders" element={<MyOrders />} /> {/* ✅ Add this */}
+          <Route path="/cart-drawer" element={<CartDrawer />} />
 
           {/* Common */}
           <Route
@@ -107,6 +107,7 @@ const App = () => {
             }
           />
         </Routes>
+        Rout
       </div>
     </div>
   );

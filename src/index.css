@@ -413,6 +413,15 @@
   @apply bg-red-500 cursor-pointer text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-300;
 }
 
+@keyframes slideIn {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(0); }
+}
+.animate-slideIn {
+  animation: slideIn 0.28s ease-out;
+}
+
+
 
 
 
