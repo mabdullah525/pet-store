@@ -75,36 +75,7 @@
   @apply w-full flex items-center justify-center gap-2 text-red-600 hover:bg-red-50 py-2 font-medium;
 }
 
-
-
-
-/* Sidebar Layout */
-.sidebar {
-  @apply w-64 h-screen bg-white shadow-md flex flex-col justify-between p-5 border-r border-gray-200;
-}
-
-/* Menu Items */
-.menu {
-  @apply flex flex-col gap-2;
-}
-
-.menu-item {
-  @apply flex items-center gap-3 text-gray-600 px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition;
-}
-
-.menu-item.active {
-  @apply bg-blue-100 text-blue-700 font-semibold;
-}
-
-/* Logout Button */
-.logout-btn {
-  @apply flex items-center gap-3 text-red-600 px-3 py-2 rounded-lg hover:bg-red-50 transition;
-}
-
-/* Icon */
-.icon {
-  @apply flex items-center justify-center ;
-}
+/* Topbar end */
 
 /* Dashboard Layout */
 .dashboard {

@@ -44,9 +44,7 @@ const Sidebar = () => {
                 <p className="font-semibold text-white">
                   {user.displayName || "User"}
                 </p>
-                <p className="text-sm text-white/70">
-                  {user.email?.split("@")[0]}
-                </p>
+
               </div>
             </div>
           </div>
