@@ -107,7 +107,6 @@ const App = () => {
             }
           />
         </Routes>
-        Rout
       </div>
     </div>
   );

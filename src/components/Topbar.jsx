@@ -16,9 +16,6 @@ const Topbar = () => {
       {/* Icons */}
       <div className="icons">
         <button className="icon-btn">
-          <ShoppingCart size={20} />
-        </button>
-        <button className="icon-btn">
           <Bell size={20} />
         </button>
         <button

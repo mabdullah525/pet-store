@@ -75,7 +75,7 @@ const MyListings = () => {
             </p>
 
             {/* 🛒 Buy Button */}
-            <button
+            {/* <button
               onClick={() => handleBuy(pet)}
               disabled={buying === pet.id}
               className={`mt-4 w-full py-2 rounded-lg text-white font-semibold transition-all ${buying === pet.id
@@ -84,7 +84,7 @@ const MyListings = () => {
                 }`}
             >
               {buying === pet.id ? "Processing..." : "Buy Now 🛍️"}
-            </button>
+            </button> */}
           </div>
         ))}
       </div>
