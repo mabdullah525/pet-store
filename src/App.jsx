@@ -2,40 +2,42 @@ import React from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import { useFirebase } from "./context/Firebase.jsx";
 
-// Pages
+// 🧩 Pages
 import Register from "./pages/Register.jsx";
 import Login from "./pages/Login.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
-import Addlisting from "./pages/Addlisting.jsx";
-import Mylisting from "./pages/Mylisting.jsx";
+import AddListing from "./pages/AddListing.jsx"; // ✅ Capitalized correctly
+import MyListing from "./pages/MyListing.jsx";   // ✅ Capitalized correctly
 import BuyerDashboard from "./pages/buyer/BuyerDashboard.jsx";
 import AllPets from "./pages/buyer/AllPets.jsx";
 import BuyerNavbar from "./pages/buyer/BuyerNavbar.jsx";
 import SellerOrder from "./pages/SellerOrder.jsx";
 
-// Components
+// 🧱 Components
 import Topbar from "./components/Topbar.jsx";
 import Sidebar from "./components/Sidebar.jsx";
-import Profile from "./components/profile.jsx";
+import Profile from "./components/Profile.jsx"; // ✅ Capitalized correctly
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import CartDrawer from "./components/CartDrawer.jsx";
+
 const App = () => {
   const { user, userRole } = useFirebase();
   const location = useLocation();
 
-  // 🔹 Hide layout on login/register
+  // 🔹 Hide layout on login/register pages
   const hideLayout =
     location.pathname === "/login" || location.pathname === "/register";
 
-  // 🔹 Check if it's a buyer or seller
+  // 🔹 Check if logged-in user is seller
   const isSeller = userRole === "seller";
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      {/* 🔸 Seller Layout */}
+      {/* 🔸 Seller Sidebar */}
       {!hideLayout && isSeller && user && <Sidebar />}
 
       <div className="flex-1 flex flex-col">
+        {/* 🔸 Seller Topbar */}
         {!hideLayout && isSeller && user && <Topbar />}
 
         <Routes>
@@ -52,12 +54,11 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/add-listing"
             element={
               <ProtectedRoute>
-                {isSeller ? <Addlisting /> : <BuyerDashboard />}
+                {isSeller ? <AddListing /> : <BuyerDashboard />}
               </ProtectedRoute>
             }
           />
@@ -65,7 +66,7 @@ const App = () => {
             path="/my-listings"
             element={
               <ProtectedRoute>
-                {isSeller ? <Mylisting /> : <BuyerDashboard />}
+                {isSeller ? <MyListing /> : <BuyerDashboard />}
               </ProtectedRoute>
             }
           />
@@ -95,9 +96,11 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+
+          {/* Cart Drawer */}
           <Route path="/cart-drawer" element={<CartDrawer />} />
 
-          {/* Common */}
+          {/* Profile Page */}
           <Route
             path="/profile"
             element={
@@ -107,7 +110,6 @@ const App = () => {
             }
           />
         </Routes>
-        
       </div>
     </div>
   );
