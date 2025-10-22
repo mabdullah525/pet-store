@@ -13,11 +13,11 @@ const Dashboard = () => {
       if (!user) return;
 
       try {
-        // ✅ Fetch pet listings
+        // 🐶 Fetch my pets
         const pets = await getMyListings();
         setMyPetsCount(pets.length);
 
-        // ✅ Fetch orders for this user
+        // 🛒 Fetch my orders
         const q = query(
           collection(firestore, "orders"),
           where("buyerId", "==", user.uid)
@@ -35,48 +35,55 @@ const Dashboard = () => {
   const stats = [
     {
       title: "My Orders",
-      value: myOrdersCount, // 👈 now dynamic
-      icon: <Package size={24} />,
-      color: "bg-blue-100 text-blue-600",
+      value: myOrdersCount,
+      icon: <Package size={28} />,
+      gradient: "from-blue-500 to-blue-700",
     },
     {
       title: "My Pet Listings",
-      value: myPetsCount, // 👈 dynamic
-      icon: <ClipboardList size={24} />,
-      color: "bg-green-100 text-green-600",
+      value: myPetsCount,
+      icon: <ClipboardList size={28} />,
+      gradient: "from-green-500 to-green-700",
     },
     {
       title: "Notifications",
       value: "5",
-      icon: <Bell size={24} />,
-      color: "bg-yellow-100 text-yellow-600",
+      icon: <Bell size={28} />,
+      gradient: "from-yellow-400 to-yellow-600",
     },
     {
       title: "Cart Items",
       value: "3",
-      icon: <ShoppingCart size={24} />,
-      color: "bg-green-100 text-green-600",
+      icon: <ShoppingCart size={28} />,
+      gradient: "from-pink-500 to-pink-700",
     },
   ];
 
   return (
-    <div className="dashboard">
-      <h1 className="dashboard-title">Welcome Back 🐾</h1>
-      <p className="text-gray-600 mb-6">
-        Here’s an overview of your pet store account activity.
-      </p>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-10 px-6">
+      <div className="max-w-6xl mx-auto">
+        <h1 className="text-4xl font-bold text-gray-800 mb-2">
+          Welcome Back 🐾
+        </h1>
+        <p className="text-gray-600 mb-10 text-lg">
+          Here’s an overview of your pet store activity.
+        </p>
 
-      {/* Stats Cards */}
-      <div className="stats-grid">
-        {stats.map((item, index) => (
-          <div key={index} className="stat-card">
-            <div className={`icon-wrapper ${item.color}`}>{item.icon}</div>
-            <div>
-              <p className="text-gray-500 text-sm">{item.title}</p>
-              <h2 className="text-2xl font-semibold">{item.value}</h2>
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {stats.map((item, index) => (
+            <div
+              key={index}
+              className={`rounded-2xl shadow-md p-6 bg-gradient-to-br ${item.gradient} text-white transform transition hover:scale-105 hover:shadow-xl`}
+            >
+              <div className="flex items-center justify-between">
+                <div className="bg-white/20 p-3 rounded-xl">{item.icon}</div>
+                <h2 className="text-3xl font-bold">{item.value}</h2>
+              </div>
+              <p className="mt-4 text-white/90 font-medium">{item.title}</p>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );
