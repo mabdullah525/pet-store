@@ -1,36 +1,53 @@
 import React, { useState } from "react";
-import { Search, ShoppingCart, Bell, User } from "lucide-react";
-import Profile from "./profile.jsx";
+import { Bell, LogOut } from "lucide-react";
+import { useFirebase } from "../context/Firebase.jsx";
 
 
 const Topbar = () => {
-  const [showProfile, setShowProfile] = useState(false);
+  const { user, logoutUser } = useFirebase();
+  const [showDropdown, setShowDropdown] = useState(false);
 
   return (
     <header className="topbar">
-      {/* Logo */}
-      <div className="logo">
+      {/* 🐾 Logo */}
+      <div className="topbar-logo">
         🐾 <span>PetStore</span>
       </div>
 
-      {/* Icons */}
-      <div className="icons">
-        <button className="icon-btn">
-          <Bell size={20} />
-        </button>
-        <button
-          className="icon-btn"
-          onClick={() => setShowProfile(!showProfile)}
-        >
-          <User size={20} />
+      {/* 🔔 Right Section */}
+      <div className="topbar-right">
+        {/* Notification */}
+        <button className="notify-btn">
+          <Bell size={22} className="notify-icon" />
+          <span className="notify-dot"></span>
         </button>
 
-        {/* Profile Modal */}
-        {showProfile && (
-          <div className="profile-modal">
-            <Profile />
-          </div>
-        )}
+        {/* 👤 Profile */}
+        <div className="profile-section">
+          <button
+            onClick={() => setShowDropdown(!showDropdown)}
+            className="profile-btn"
+          >
+            <img
+              src={user?.photoURL || "/default-avatar.png"}
+              alt="Profile"
+              className="profile-img"
+            />
+            <span className="profile-name">Abdullah</span>
+          </button>
+
+          {showDropdown && (
+            <div className="profile-dropdown">
+              <div className="profile-email">
+                {user?.email || "user@gmail.com"}
+              </div>
+
+              <button onClick={logoutUser} className="logout-btn">
+                <LogOut size={18} /> Logout
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </header>
   );
