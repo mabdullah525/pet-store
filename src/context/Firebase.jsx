@@ -72,19 +72,28 @@ export const FirebaseProvider = ({ children }) => {
   const isLoggedIn = !!user;
 
   // 🔹 Register (Email/Password)
+  // 🔹 Register (Email/Password)
   const registerUser = async (email, password, role = "buyer") => {
+    // create user
     const res = await createUserWithEmailAndPassword(firebaseAuth, email, password);
     const uid = res.user.uid;
 
+    // save user info to Firestore
     await setDoc(doc(firestore, "users", uid), {
       email,
       role,
       createdAt: new Date(),
     });
 
-    setUserRole(role);
+    // 👇 Immediately sign out after registration so user isn't auto logged in
+    await signOut(firebaseAuth);
+
+    // reset role state
+    setUserRole(null);
+
     return res;
   };
+
 
   // 🔹 Login (Email/Password)
   const loginUser = async (email, password) => {
@@ -218,7 +227,7 @@ export const FirebaseProvider = ({ children }) => {
     }
   };
 
-  // 🔹 Create Order (Buy Now)
+
   // 🔹 Create Order (Buy Now)
   const createOrder = async (orderData) => {
     try {
