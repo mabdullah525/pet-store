@@ -14,6 +14,8 @@ import SellerOrder from "./pages/SellerOrder.jsx";
 // 🧱 Components
 import Topbar from "./components/Topbar.jsx";
 import Sidebar from "./components/Sidebar.jsx";
+import BuyerSidebar from "./pages/buyer/BuyerSidebar.jsx"; // ✅ new buyer sidebar
+import BuyerNavbar from "./pages/buyer/BuyerNavbar.jsx"; // ✅ buyer topbar/navbar
 import Profile from "./components/Profile.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import CartDrawer from "./components/CartDrawer.jsx";
@@ -32,12 +34,18 @@ const App = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      {/* 🔸 Seller Sidebar (Only for Sellers) */}
+      {/* 🔸 Seller Sidebar */}
       {!hideLayout && isSeller && user && <Sidebar />}
 
+      {/* 🔸 Buyer Sidebar */}
+      {!hideLayout && isBuyer && user && <BuyerSidebar />}
+
       <div className="flex-1 flex flex-col">
-        {/* 🔸 Seller Topbar (Only for Sellers) */}
+        {/* 🔸 Seller Topbar */}
         {!hideLayout && isSeller && user && <Topbar />}
+
+        {/* 🔸 Buyer Navbar */}
+        {!hideLayout && isBuyer && user && <BuyerNavbar />}
 
         <Routes>
           {/* 🔓 Public Routes */}
@@ -91,7 +99,7 @@ const App = () => {
             }
           />
 
-          {/* 👤 Profile (both roles) */}
+          {/* 👤 Profile */}
           <Route
             path="/profile"
             element={
@@ -101,7 +109,7 @@ const App = () => {
             }
           />
 
-          {/* 🛒 Cart Drawer (buyer only) */}
+          {/* 🛒 Cart Drawer */}
           <Route
             path="/cart-drawer"
             element={
@@ -111,7 +119,7 @@ const App = () => {
             }
           />
 
-          {/* ⚠️ Default Redirect Based on Role */}
+          {/* ⚠️ Default Redirect */}
           <Route
             path="/"
             element={

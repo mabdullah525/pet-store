@@ -234,50 +234,6 @@ button:disabled {
   padding: 2.5rem 1rem;
 }
 
-/* Header */
-.buyer-header {
-  background: white;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  border-radius: 1rem;
-  padding: 1.5rem;
-  width: 90%;
-  max-width: 700px;
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.buyer-header h1 {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #1f2937;
-  margin-bottom: 0.5rem;
-}
-
-.buyer-header p {
-  color: #4b5563;
-}
-
-.buyer-header span {
-  font-weight: 600;
-}
-
-/* Browse Button */
-.browse-btn {
-  background-color: #6366f1;
-  color: white;
-  font-weight: 600;
-  padding: 0.75rem 2rem;
-  border-radius: 0.75rem;
-  box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
-  text-decoration: none;
-  transition: all 0.3s ease;
-  margin-bottom: 2rem;
-}
-
-.browse-btn:hover {
-  background-color: #4f46e5;
-  transform: translateY(-2px);
-}
 
 /* Orders Section */
 .orders-section {
@@ -343,46 +299,7 @@ button:disabled {
   padding: 2rem 0;
 }
 
-.allPets-container {
-  @apply min-h-screen bg-gray-50 py-10 flex flex-col items-center;
-}
 
-.allPets-title {
-  @apply text-3xl font-bold text-gray-800 mb-8;
-}
-
-.allPets-loading,
-.allPets-empty {
-  @apply text-gray-600 text-lg;
-}
-
-.allPets-grid {
-  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-11/12 max-w-6xl;
-}
-
-.allPets-card {
-  @apply bg-white rounded-2xl shadow-md overflow-hidden transition-all hover:shadow-lg hover:scale-[1.02];
-}
-
-.allPets-image {
-  @apply w-full h-56 object-cover;
-}
-
-.allPets-details {
-  @apply p-4;
-}
-
-.allPets-name {
-  @apply text-xl font-semibold text-gray-800;
-}
-
-.allPets-breed {
-  @apply text-gray-600;
-}
-
-.allPets-price {
-  @apply text-indigo-600 font-bold mt-2;
-}
 
 
 /* 🌟 Buyer Navbar Styles */

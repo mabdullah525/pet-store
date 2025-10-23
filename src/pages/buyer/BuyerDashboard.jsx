@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useFirebase } from "../../context/Firebase.jsx";
-import BuyerNavbar from "./BuyerNavbar.jsx";
 
 const BuyerDashboard = () => {
   const { firestore, user, addOrder, addToCart } = useFirebase();
@@ -8,12 +7,13 @@ const BuyerDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(null);
 
-  // 🔹 Pets fetch karna Firestore se
+  // 🔹 Fetch pets from Firestore
   useEffect(() => {
     const fetchPets = async () => {
       try {
         const snapshot = await import("firebase/firestore").then(
-          ({ getDocs, collection }) => getDocs(collection(firestore, "petListings"))
+          ({ getDocs, collection }) =>
+            getDocs(collection(firestore, "petListings"))
         );
 
         const fetchedPets = snapshot.docs.map((doc) => ({
@@ -30,12 +30,9 @@ const BuyerDashboard = () => {
     fetchPets();
   }, [firestore]);
 
-  // 🛒 Add to Cart handler
+  // 🛒 Add to Cart
   const handleAddToCart = async (pet) => {
-    if (!user) {
-      alert("Please login first to add to cart 🐾");
-      return;
-    }
+    if (!user) return alert("Please login first 🐾");
 
     setProcessing(pet.id);
     try {
@@ -50,24 +47,17 @@ const BuyerDashboard = () => {
         addedAt: new Date().toISOString(),
       });
 
-      if (success) {
-        alert(`✅ ${pet.petName} added to your cart!`);
-      } else {
-        alert("❌ Failed to add item to cart.");
-      }
-    } catch (error) {
-      console.error("❌ Error adding to cart:", error);
+      alert(success ? `✅ ${pet.petName} added to cart!` : "❌ Failed to add.");
+    } catch (err) {
+      console.error("❌ Error adding to cart:", err);
       alert("Something went wrong!");
     }
     setProcessing(null);
   };
 
-  // 💳 Buy Now handler
+  // 💳 Buy Now
   const handleBuyNow = async (pet) => {
-    if (!user) {
-      alert("Please login first to place an order 🐾");
-      return;
-    }
+    if (!user) return alert("Please login first 🐾");
 
     setProcessing(pet.id);
     try {
@@ -82,11 +72,7 @@ const BuyerDashboard = () => {
         orderDate: new Date().toISOString(),
       });
 
-      if (success) {
-        alert(`✅ You purchased ${pet.petName} successfully!`);
-      } else {
-        alert("❌ Order placement failed!");
-      }
+      alert(success ? `✅ Purchased ${pet.petName}!` : "❌ Order failed!");
     } catch (err) {
       console.error("❌ Error in handleBuyNow:", err);
       alert("Something went wrong!");
@@ -95,57 +81,64 @@ const BuyerDashboard = () => {
   };
 
   return (
-    <div>
-      <BuyerNavbar />
-      <div className="allPets-container">
-        <h1 className="allPets-title">🐾 Browse Pets</h1>
+    <main className="flex-1 overflow-y-auto p-6 md:p-8 bg-gray-100">
+      <h1 className="text-3xl font-bold text-gray-800 mb-8 flex items-center gap-2">
+        🐾 Browse Available Pets
+      </h1>
 
-        {loading ? (
-          <p className="allPets-loading">🐾 Loading available pets...</p>
-        ) : pets.length === 0 ? (
-          <p className="allPets-empty">No pets available right now 🐶</p>
-        ) : (
-          <div className="allPets-grid">
-            {pets.map((pet) => (
-              <div key={pet.id} className="allPets-card">
-                <img
-                  src={pet.imageUrl}
-                  alt={pet.petName}
-                  className="allPets-image"
-                />
-                <div className="allPets-details">
-                  <h2 className="allPets-name">{pet.petName}</h2>
-                  <p className="allPets-breed">Breed: {pet.breed}</p>
-                  <p className="allPets-price">Price: Rs.{pet.price}</p>
+      {loading ? (
+        <p className="text-gray-500 text-lg">Loading pets...</p>
+      ) : pets.length === 0 ? (
+        <p className="text-gray-500 text-lg">
+          No pets available right now 🐶
+        </p>
+      ) : (
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
+          {pets.map((pet) => (
+            <div
+              key={pet.id}
+              className="bg-white rounded-2xl shadow hover:shadow-lg transition-all duration-200 p-4 flex flex-col"
+            >
+              <img
+                src={pet.imageUrl}
+                alt={pet.petName}
+                className="h-48 w-full object-cover rounded-xl"
+              />
 
-                  <div className="allPets-btn-group">
-                    <button
-                      className="addToCart-btn"
-                      onClick={() => handleAddToCart(pet)}
-                      disabled={processing === pet.id}
-                    >
-                      {processing === pet.id
-                        ? "Adding..."
-                        : "Add to Cart 🛍️"}
-                    </button>
-
-                    {/* <button
-                      className="buyNow-btn"
-                      onClick={() => handleBuyNow(pet)}
-                      disabled={processing === pet.id}
-                    >
-                      {processing === pet.id
-                        ? "Processing..."
-                        : "Buy Now 🛒"}
-                    </button> */}
-                  </div>
-                </div>
+              <div className="mt-4 flex-1">
+                <h2 className="text-xl font-semibold text-gray-800">
+                  {pet.petName}
+                </h2>
+                <p className="text-sm text-gray-500">
+                  Breed: {pet.breed || "N/A"}
+                </p>
+                <p className="mt-1 text-lg font-bold text-blue-600">
+                  Rs. {pet.price}
+                </p>
               </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
+
+              <div className="mt-4 flex gap-2">
+                <button
+                  onClick={() => handleAddToCart(pet)}
+                  disabled={processing === pet.id}
+                  className="flex-1 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
+                >
+                  {processing === pet.id ? "Adding..." : "Add to Cart 🛍️"}
+                </button>
+
+                <button
+                  onClick={() => handleBuyNow(pet)}
+                  disabled={processing === pet.id}
+                  className="flex-1 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition disabled:opacity-50"
+                >
+                  {processing === pet.id ? "Processing..." : "Buy Now 🐾"}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </main>
   );
 };
 
