@@ -5,10 +5,10 @@ import { useFirebase } from "./context/Firebase.jsx";
 // 🧩 Pages
 import Register from "./pages/Register.jsx";
 import Login from "./pages/Login.jsx";
-import Dashboard from "./pages/Dashboard.jsx";
+import Dashboard from "./pages/Dashboard.jsx"; // Seller dashboard
 import AddListing from "./pages/AddListing.jsx";
 import MyListing from "./pages/MyListing.jsx";
-import AllPets from "./pages/buyer/BuyerDashboard.jsx";
+import BuyerDashboard from "./pages/buyer/BuyerDashboard.jsx"; // Buyer dashboard
 import SellerOrder from "./pages/SellerOrder.jsx";
 
 // 🧱 Components
@@ -26,16 +26,17 @@ const App = () => {
   const hideLayout =
     location.pathname === "/login" || location.pathname === "/register";
 
-  // 🔹 Check if logged-in user is seller
+  // 🔹 Role check
   const isSeller = userRole === "seller";
+  const isBuyer = userRole === "buyer";
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      {/* 🔸 Seller Sidebar */}
+      {/* 🔸 Seller Sidebar (Only for Sellers) */}
       {!hideLayout && isSeller && user && <Sidebar />}
 
       <div className="flex-1 flex flex-col">
-        {/* 🔸 Seller Topbar */}
+        {/* 🔸 Seller Topbar (Only for Sellers) */}
         {!hideLayout && isSeller && user && <Topbar />}
 
         <Routes>
@@ -45,10 +46,10 @@ const App = () => {
 
           {/* 🧑‍💼 Seller Protected Routes */}
           <Route
-            path="/"
+            path="/seller-dashboard"
             element={
-              <ProtectedRoute>
-                {isSeller ? <Dashboard /> : <Navigate to="/all-pets" replace />}
+              <ProtectedRoute allowedRoles={["seller"]}>
+                <Dashboard />
               </ProtectedRoute>
             }
           />
@@ -56,8 +57,8 @@ const App = () => {
           <Route
             path="/add-listing"
             element={
-              <ProtectedRoute>
-                {isSeller ? <AddListing /> : <Navigate to="/all-pets" replace />}
+              <ProtectedRoute allowedRoles={["seller"]}>
+                <AddListing />
               </ProtectedRoute>
             }
           />
@@ -65,8 +66,8 @@ const App = () => {
           <Route
             path="/my-listings"
             element={
-              <ProtectedRoute>
-                {isSeller ? <MyListing /> : <Navigate to="/all-pets" replace />}
+              <ProtectedRoute allowedRoles={["seller"]}>
+                <MyListing />
               </ProtectedRoute>
             }
           />
@@ -74,36 +75,59 @@ const App = () => {
           <Route
             path="/seller-orders"
             element={
-              <ProtectedRoute>
-                {isSeller ? <SellerOrder /> : <Navigate to="/all-pets" replace />}
+              <ProtectedRoute allowedRoles={["seller"]}>
+                <SellerOrder />
               </ProtectedRoute>
             }
           />
 
           {/* 🐾 Buyer Protected Routes */}
           <Route
-            path="/all-pets"
+            path="/buyer-dashboard"
             element={
-              <ProtectedRoute>
-                <AllPets />
+              <ProtectedRoute allowedRoles={["buyer"]}>
+                <BuyerDashboard />
               </ProtectedRoute>
             }
           />
 
-          {/* 👤 Profile */}
+          {/* 👤 Profile (both roles) */}
           <Route
             path="/profile"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={["buyer", "seller"]}>
                 <Profile />
               </ProtectedRoute>
             }
           />
 
-          {/* 🛒 Cart Drawer */}
-          <Route path="/cart-drawer" element={<CartDrawer />} />
+          {/* 🛒 Cart Drawer (buyer only) */}
+          <Route
+            path="/cart-drawer"
+            element={
+              <ProtectedRoute allowedRoles={["buyer"]}>
+                <CartDrawer />
+              </ProtectedRoute>
+            }
+          />
 
-          {/* ⚠️ Catch All - Agar koi route nahi milta */}
+          {/* ⚠️ Default Redirect Based on Role */}
+          <Route
+            path="/"
+            element={
+              user ? (
+                isSeller ? (
+                  <Navigate to="/seller-dashboard" replace />
+                ) : (
+                  <Navigate to="/buyer-dashboard" replace />
+                )
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
+          />
+
+          {/* ⚠️ Catch All */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
