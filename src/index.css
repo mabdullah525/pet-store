@@ -1,27 +1,54 @@
 @import "tailwindcss";
 
+/* Register Page */
+
 .register-container {
-  @apply flex items-center justify-center min-h-screen bg-gray-50;
+  @apply flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100;
 }
 
 .register-form {
-  @apply bg-white p-8 rounded-2xl shadow-lg w-full max-w-md;
+  @apply bg-white shadow-xl rounded-2xl p-8 w-full max-w-md transition-all duration-300 hover:shadow-2xl;
 }
 
 .form-title {
-  @apply text-2xl font-bold text-center mb-6 text-gray-800;
+  @apply text-2xl font-extrabold mb-6 text-center text-gray-800 tracking-wide;
+}
+
+.form-group {
+  @apply mb-4;
 }
 
 .form-group label {
-  @apply block mb-2 text-gray-700 font-medium;
+  @apply block mb-1 font-semibold text-gray-700;
 }
 
-.form-group input {
-  @apply w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400;
+.form-group input,
+.form-group select {
+  @apply w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none;
 }
 
-.submit-btn {
-  @apply cursor-pointer w-full mt-4 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-300;
+button[type="submit"] {
+  @apply w-full bg-blue-500 text-white py-2 rounded-lg font-semibold mt-2 transition hover:bg-blue-600 hover:shadow-lg;
+}
+
+.register-form a {
+  @apply text-blue-600 hover:text-blue-700 hover:underline;
+}
+
+/* ✅ Success/Error Message */
+.text-center.p-3 {
+  @apply text-sm rounded-md font-medium;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .register-form {
+    @apply p-6 rounded-xl;
+  }
+
+  .form-title {
+    @apply text-xl;
+  }
 }
 
 /* Topbar Styles */
@@ -43,9 +70,11 @@
 .notify-btn {
   @apply relative p-2 rounded-full hover:bg-gray-100 transition;
 }
+
 .notify-icon {
   @apply text-gray-600;
 }
+
 .notify-dot {
   @apply absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full;
 }
@@ -54,12 +83,15 @@
 .profile-section {
   @apply relative flex items-center gap-3;
 }
+
 .profile-btn {
   @apply flex items-center gap-2 cursor-pointer;
 }
+
 .profile-img {
   @apply w-9 h-9 rounded-full border border-gray-300 object-cover hover:scale-105 transition-transform;
 }
+
 .profile-name {
   @apply text-gray-800 font-medium hidden sm:block;
 }
@@ -68,9 +100,11 @@
 .profile-dropdown {
   @apply absolute right-0 top-12 w-60 bg-white border border-gray-200 rounded-xl shadow-lg py-2 z-50;
 }
+
 .profile-email {
   @apply px-4 py-2 text-center text-sm text-gray-700 border-b truncate;
 }
+
 .logout-btn {
   @apply w-full flex items-center justify-center gap-2 text-red-600 hover:bg-red-50 py-2 font-medium;
 }
@@ -122,14 +156,11 @@
 }
 
 .addListing-input {
-  @apply border border-gray-300 rounded-xl px-4 py-3 text-gray-700 
-  focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200;
+  @apply border border-gray-300 rounded-xl px-4 py-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200;
 }
 
 .addListing-button {
-  @apply bg-indigo-600 text-white font-semibold py-3 rounded-xl 
-  hover:bg-indigo-700 transition duration-300 
-  disabled:opacity-60 disabled:cursor-not-allowed;
+  @apply bg-indigo-600 text-white font-semibold py-3 rounded-xl hover:bg-indigo-700 transition duration-300 disabled:opacity-60 disabled:cursor-not-allowed;
 }
 
 /* ----------------- Topbar ----------------- */
@@ -171,8 +202,15 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ===== Buyer Dashboard Styles ===== */
@@ -293,6 +331,7 @@
   font-size: 1rem;
   padding: 2rem 0;
 }
+
 .allPets-container {
   @apply min-h-screen bg-gray-50 py-10 flex flex-col items-center;
 }
@@ -364,6 +403,7 @@
 .buyer-logout-btn {
   @apply bg-indigo-500 text-white px-4 py-2 rounded-xl font-semibold hover:bg-indigo-600 transition-all;
 }
+
 .addToCart-btn {
   @apply bg-green-500 cursor-pointer text-white py-2 px-4 rounded-lg font-medium hover:bg-green-600 transition-all;
 }
@@ -375,6 +415,7 @@
 .allPets-btn-group {
   @apply flex gap-3 mt-3;
 }
+
 .addToCart-btn {
   @apply bg-green-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-green-600 transition-all;
 }
@@ -382,6 +423,7 @@
 .buyNow-btn {
   @apply bg-blue-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-600 transition-all;
 }
+
 .cart-container {
   @apply min-h-screen bg-gray-50 py-12 px-6 flex flex-col items-center;
 }
@@ -424,23 +466,15 @@
 }
 
 @keyframes slideIn {
-  from { transform: translateX(-100%); }
-  to   { transform: translateX(0); }
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
 }
+
 .animate-slideIn {
   animation: slideIn 0.28s ease-out;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

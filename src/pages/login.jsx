@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useFirebase } from "../context/Firebase.jsx";
 import { useNavigate, Link } from "react-router-dom";
 
-const login = () => {
+const Login = () => {
   const firebase = useFirebase();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -19,7 +19,7 @@ const login = () => {
   const checkUserRole = async (uid) => {
     const role = await firebase.getUserRole(uid);
     if (role === "seller") navigate("/");
-    else if (role === "buyer") navigate("/buyer-dashboard");
+    else if (role === "buyer") navigate("/all-pets");
     else navigate("/login");
   };
 
@@ -147,4 +147,4 @@ const login = () => {
   );
 };
 
-export default login;
+export default Login;

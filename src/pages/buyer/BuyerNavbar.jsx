@@ -24,7 +24,7 @@ const BuyerNavbar = () => {
       <nav className="w-full bg-white shadow-md px-6 py-3 flex items-center justify-between">
         {/* 🐾 Left Section - Logo */}
         <Link
-          to="/buyer-dashboard"
+          to="/all-pets"
           className="flex items-center gap-2 text-xl font-bold text-blue-600"
         >
           🐾 <span>PetStore</span>
@@ -33,22 +33,13 @@ const BuyerNavbar = () => {
         {/* 🔗 Center Links */}
         <div className="hidden md:flex gap-6 text-gray-700 font-medium">
           <NavLink
-            to="/buyer-dashboard"
+            to="/all-pets"
             end
             className={({ isActive }) =>
               isActive ? "text-blue-600 font-semibold" : "hover:text-blue-600"
             }
           >
-            Dashboard
-          </NavLink>
-
-          <NavLink
-            to="/all-pets"
-            className={({ isActive }) =>
-              isActive ? "text-blue-600 font-semibold" : "hover:text-blue-600"
-            }
-          >
-            Browse Pets
+            All Pets
           </NavLink>
 
           <button

@@ -4,19 +4,17 @@ import { useFirebase } from "./context/Firebase.jsx";
 
 // 🧩 Pages
 import Register from "./pages/Register.jsx";
-import Login from "./pages/login.jsx";
+import Login from "./pages/Login.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
-import AddListing from "./pages/Addlisting.jsx"; // ✅ Capitalized correctly
-import MyListing from "./pages/Mylisting.jsx";   // ✅ Capitalized correctly
-import BuyerDashboard from "./pages/buyer/BuyerDashboard.jsx";
+import AddListing from "./pages/AddListing.jsx";
+import MyListing from "./pages/MyListing.jsx";
 import AllPets from "./pages/buyer/AllPets.jsx";
-import BuyerNavbar from "./pages/buyer/BuyerNavbar.jsx";
 import SellerOrder from "./pages/SellerOrder.jsx";
 
 // 🧱 Components
 import Topbar from "./components/Topbar.jsx";
 import Sidebar from "./components/Sidebar.jsx";
-import Profile from "./components/Profile.jsx"; // ✅ Capitalized correctly
+import Profile from "./components/Profile.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import CartDrawer from "./components/CartDrawer.jsx";
 
@@ -41,35 +39,38 @@ const App = () => {
         {!hideLayout && isSeller && user && <Topbar />}
 
         <Routes>
-          {/* Public Routes */}
+          {/* 🔓 Public Routes */}
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
 
-          {/* Seller Routes */}
+          {/* 🧑‍💼 Seller Routes */}
           <Route
             path="/"
             element={
               <ProtectedRoute>
-                {isSeller ? <Dashboard /> : <BuyerDashboard />}
+                {isSeller ? <Dashboard /> : <AllPets />}
               </ProtectedRoute>
             }
           />
+
           <Route
             path="/add-listing"
             element={
               <ProtectedRoute>
-                {isSeller ? <AddListing /> : <BuyerDashboard />}
+                {isSeller ? <AddListing /> : <AllPets />}
               </ProtectedRoute>
             }
           />
+
           <Route
             path="/my-listings"
             element={
               <ProtectedRoute>
-                {isSeller ? <MyListing /> : <BuyerDashboard />}
+                {isSeller ? <MyListing /> : <AllPets />}
               </ProtectedRoute>
             }
           />
+
           <Route
             path="/seller-orders"
             element={
@@ -79,15 +80,7 @@ const App = () => {
             }
           />
 
-          {/* Buyer Routes */}
-          <Route
-            path="/buyer-dashboard"
-            element={
-              <ProtectedRoute>
-                <BuyerDashboard />
-              </ProtectedRoute>
-            }
-          />
+          {/* 🐾 Buyer Routes */}
           <Route
             path="/all-pets"
             element={
@@ -97,10 +90,10 @@ const App = () => {
             }
           />
 
-          {/* Cart Drawer */}
+          {/* 🛒 Cart Drawer */}
           <Route path="/cart-drawer" element={<CartDrawer />} />
 
-          {/* Profile Page */}
+          {/* 👤 Profile Page */}
           <Route
             path="/profile"
             element={
@@ -114,6 +107,5 @@ const App = () => {
     </div>
   );
 };
-
 
 export default App;
