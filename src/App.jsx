@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation, Navigate } from "react-router-dom";
 import { useFirebase } from "./context/Firebase.jsx";
 
 // 🧩 Pages
@@ -8,7 +8,7 @@ import Login from "./pages/Login.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import AddListing from "./pages/AddListing.jsx";
 import MyListing from "./pages/MyListing.jsx";
-import AllPets from "./pages/buyer/AllPets.jsx";
+import AllPets from "./pages/buyer/BuyerDashboard.jsx";
 import SellerOrder from "./pages/SellerOrder.jsx";
 
 // 🧱 Components
@@ -43,12 +43,12 @@ const App = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
 
-          {/* 🧑‍💼 Seller Routes */}
+          {/* 🧑‍💼 Seller Protected Routes */}
           <Route
             path="/"
             element={
               <ProtectedRoute>
-                {isSeller ? <Dashboard /> : <AllPets />}
+                {isSeller ? <Dashboard /> : <Navigate to="/all-pets" replace />}
               </ProtectedRoute>
             }
           />
@@ -57,7 +57,7 @@ const App = () => {
             path="/add-listing"
             element={
               <ProtectedRoute>
-                {isSeller ? <AddListing /> : <AllPets />}
+                {isSeller ? <AddListing /> : <Navigate to="/all-pets" replace />}
               </ProtectedRoute>
             }
           />
@@ -66,7 +66,7 @@ const App = () => {
             path="/my-listings"
             element={
               <ProtectedRoute>
-                {isSeller ? <MyListing /> : <AllPets />}
+                {isSeller ? <MyListing /> : <Navigate to="/all-pets" replace />}
               </ProtectedRoute>
             }
           />
@@ -75,12 +75,12 @@ const App = () => {
             path="/seller-orders"
             element={
               <ProtectedRoute>
-                <SellerOrder />
+                {isSeller ? <SellerOrder /> : <Navigate to="/all-pets" replace />}
               </ProtectedRoute>
             }
           />
 
-          {/* 🐾 Buyer Routes */}
+          {/* 🐾 Buyer Protected Routes */}
           <Route
             path="/all-pets"
             element={
@@ -90,10 +90,7 @@ const App = () => {
             }
           />
 
-          {/* 🛒 Cart Drawer */}
-          <Route path="/cart-drawer" element={<CartDrawer />} />
-
-          {/* 👤 Profile Page */}
+          {/* 👤 Profile */}
           <Route
             path="/profile"
             element={
@@ -102,6 +99,12 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+
+          {/* 🛒 Cart Drawer */}
+          <Route path="/cart-drawer" element={<CartDrawer />} />
+
+          {/* ⚠️ Catch All - Agar koi route nahi milta */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
     </div>

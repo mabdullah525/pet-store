@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useFirebase } from "../../context/Firebase.jsx";
-import BuyerNavbar from "../buyer/BuyerNavbar.jsx";
+import BuyerNavbar from "./BuyerNavbar.jsx";
 
-const AllPets = () => {
+const BuyerDashboard = () => {
   const { firestore, user, addOrder, addToCart } = useFirebase();
   const [pets, setPets] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -149,4 +149,4 @@ const AllPets = () => {
   );
 };
 
-export default AllPets;
+export default BuyerDashboard;
