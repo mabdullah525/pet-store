@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useFirebase } from "../context/Firebase.jsx";
 
 
-const AddListing = () => {
+const Addlisting = () => {
   const { uploadImage, addPetListing } = useFirebase();
 
   const [petName, setPetName] = useState("");
@@ -98,4 +98,4 @@ const AddListing = () => {
   );
 };
 
-export default AddListing;
+export default Addlisting;

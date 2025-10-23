@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useFirebase } from "../context/Firebase.jsx";
 
-const MyListings = () => {
+const Mylisting = () => {
   const { getMyListings, user, addOrder } = useFirebase();
   const [pets, setPets] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -92,4 +92,4 @@ const MyListings = () => {
   );
 };
 
-export default MyListings;
+export default Mylisting;

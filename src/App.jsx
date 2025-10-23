@@ -4,10 +4,10 @@ import { useFirebase } from "./context/Firebase.jsx";
 
 // 🧩 Pages
 import Register from "./pages/Register.jsx";
-import Login from "./pages/Login.jsx";
+import Login from "./pages/login.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
-import AddListing from "./pages/AddListing.jsx"; // ✅ Capitalized correctly
-import MyListing from "./pages/MyListing.jsx";   // ✅ Capitalized correctly
+import AddListing from "./pages/Addlisting.jsx"; // ✅ Capitalized correctly
+import MyListing from "./pages/Mylisting.jsx";   // ✅ Capitalized correctly
 import BuyerDashboard from "./pages/buyer/BuyerDashboard.jsx";
 import AllPets from "./pages/buyer/AllPets.jsx";
 import BuyerNavbar from "./pages/buyer/BuyerNavbar.jsx";

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useFirebase } from "../context/Firebase.jsx";
 import { useNavigate, Link } from "react-router-dom";
 
-const Login = () => {
+const login = () => {
   const firebase = useFirebase();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -147,4 +147,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default login;
