@@ -8,24 +8,26 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState({ type: "", text: "" });
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (firebase.isLoggedIn && firebase.user) {
-      checkUserRole(firebase.user.uid);
+      handleRedirect(firebase.user.uid);
     }
   }, [firebase.isLoggedIn, firebase.user]);
 
-  // 🔹 Check user role from Firestore
-  const checkUserRole = async (uid) => {
+  // 🔹 Redirect user based on role
+  const handleRedirect = async (uid) => {
     const role = await firebase.getUserRole(uid);
     if (role === "seller") navigate("/");
     else if (role === "buyer") navigate("/all-pets");
-    else navigate("/login");
   };
 
+  // 🔹 Email/Password Login
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage({ type: "", text: "" });
+    setLoading(true);
 
     try {
       const result = await firebase.loginUser(email, password);
@@ -33,27 +35,26 @@ const Login = () => {
 
       setMessage({
         type: "success",
-        text: `🎉 Login successful! Welcome back, ${loggedUser.email}`,
+        text: `🎉 Welcome back, ${loggedUser.email}`,
       });
 
-      // 🔹 Redirect based on role
-      setTimeout(async () => {
-        await checkUserRole(loggedUser.uid);
-      }, 1500);
-
+      setTimeout(() => handleRedirect(loggedUser.uid), 1200);
       setEmail("");
       setPassword("");
     } catch (error) {
-      console.error("Login failed:", error.message);
+      console.error("❌ Login failed:", error.message);
       setMessage({
         type: "error",
         text: `❌ ${error.message}`,
       });
+    } finally {
+      setLoading(false);
     }
   };
 
-  // ✅ Handle Google Login
+  // 🔹 Google Login
   const handleGoogleLogin = async () => {
+    setLoading(true);
     try {
       const result = await firebase.signInWithGoogle();
       const loggedUser = result.user;
@@ -63,24 +64,29 @@ const Login = () => {
         text: `🎉 Logged in with Google as ${loggedUser.displayName}`,
       });
 
-      // 🔹 Redirect based on role
-      setTimeout(async () => {
-        await checkUserRole(loggedUser.uid);
-      }, 1500);
+      setTimeout(() => handleRedirect(loggedUser.uid), 1200);
     } catch (error) {
-      console.error("Google Sign-In failed:", error.message);
+      console.error("❌ Google login failed:", error.message);
       setMessage({
         type: "error",
         text: `❌ ${error.message}`,
       });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="register-container">
-      <form onSubmit={handleSubmit} className="register-form">
-        <h2 className="form-title">Login To Your Account 🐾</h2>
+    <div className="register-container flex items-center justify-center min-h-screen bg-gray-100">
+      <form
+        onSubmit={handleSubmit}
+        className="register-form bg-white shadow-lg rounded-xl p-8 w-96"
+      >
+        <h2 className="form-title text-2xl font-bold mb-6 text-center text-gray-800">
+          Login To Your Account 🐾
+        </h2>
 
+        {/* ✅ Message Alert */}
         {message.text && (
           <div
             className={`text-center p-3 mb-4 rounded-lg font-medium ${
@@ -93,44 +99,56 @@ const Login = () => {
           </div>
         )}
 
-        <div className="form-group">
-          <label>Email</label>
+        {/* Email */}
+        <div className="form-group mb-3">
+          <label className="block mb-1 font-medium text-gray-700">Email</label>
           <input
             type="email"
             placeholder="Enter your email"
             onChange={(e) => setEmail(e.target.value)}
             value={email}
             required
+            className="w-full border rounded-lg px-3 py-2"
           />
         </div>
 
-        <div className="form-group">
-          <label>Password</label>
+        {/* Password */}
+        <div className="form-group mb-4">
+          <label className="block mb-1 font-medium text-gray-700">
+            Password
+          </label>
           <input
             type="password"
             placeholder="Enter password"
             onChange={(e) => setPassword(e.target.value)}
             value={password}
             required
+            className="w-full border rounded-lg px-3 py-2"
           />
         </div>
 
-        <button type="submit" className="submit-btn">
-          Login
+        {/* Submit */}
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition"
+        >
+          {loading ? "Logging in..." : "Login"}
         </button>
 
-        {/* ✅ Google Login */}
+        {/* Google Login */}
         <button
           type="button"
           onClick={handleGoogleLogin}
-          className="cursor-pointer google-btn mt-3 flex items-center justify-center gap-2 border border-gray-300 rounded-lg py-3 w-full hover:bg-gray-100 transition"
+          disabled={loading}
+          className="cursor-pointer mt-3 flex items-center justify-center gap-2 border border-gray-300 rounded-lg py-3 w-full hover:bg-gray-100 transition"
         >
           <img
             src="https://www.svgrepo.com/show/475656/google-color.svg"
             alt="Google"
             className="w-5 h-5"
           />
-          <span>Sign in with Google</span>
+          <span>{loading ? "Please wait..." : "Sign in with Google"}</span>
         </button>
 
         <p className="text-center mt-4 text-gray-700">
