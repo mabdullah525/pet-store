@@ -1,44 +1,46 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { Home, ShoppingBag, Heart, User, LogOut } from "lucide-react";
+import { Home, ShoppingBag, Heart, LogOut, PawPrint } from "lucide-react";
 import { useFirebase } from "../../context/Firebase.jsx";
 
-
 const BuyerSidebar = () => {
-    const { logoutUser } = useFirebase();
-
-    const handleLogout = async () => {
-        await logoutUser();
-    };
+    const { logoutUser, user } = useFirebase();
 
     const links = [
-        { to: "/all-pets", label: "All Pets", icon: <Home size={18} /> },
-        { to: "/my-orders", label: "My Orders", icon: <ShoppingBag size={18} /> },
-        { to: "/wishlist", label: "Wishlist", icon: <Heart size={18} /> },
-        { to: "/profile", label: "Profile", icon: <User size={18} /> },
+        { to: "/buyer-dashboard", label: "All Pets", icon: <Home size={20} /> },
+        { to: "/my-orders", label: "My Orders", icon: <ShoppingBag size={20} /> },
+        { to: "/wishlist", label: "Wishlist", icon: <Heart size={20} /> },
     ];
 
     return (
-        <div className="w-60 bg-white border-r h-screen shadow-sm flex flex-col justify-between">
+        <aside className="w-64 bg-gradient-to-b from-blue-600 to-indigo-700 text-white shadow-2xl p-5 flex flex-col justify-between h-screen transition-all duration-300">
+            {/* 🐾 Logo + Brand */}
             <div>
-                {/* 🐾 Logo */}
-                <div className="text-center py-5 border-b font-bold text-xl text-blue-600">
-                    🐾 PetStore
+                <div className="flex items-center gap-2 mb-8">
+                    <div className="bg-white/20 p-2 rounded-xl">
+                        <PawPrint size={26} />
+                    </div>
+                    <h1 className="text-2xl font-bold tracking-wide">PetStore</h1>
                 </div>
 
-                {/* 🔗 Navigation Links */}
-                <nav className="mt-6 flex flex-col">
+                {/* 🧭 Navigation Links */}
+                <nav className="space-y-2">
                     {links.map((link) => (
                         <NavLink
                             key={link.to}
                             to={link.to}
                             className={({ isActive }) =>
-                                `flex items-center gap-3 px-6 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition ${isActive ? "bg-blue-100 text-blue-700 font-semibold" : ""
+                                `flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 
+                ${isActive
+                                    ? "bg-white/25 text-white font-medium shadow-md"
+                                    : "text-white/80 hover:bg-white/10 hover:text-white"
                                 }`
                             }
                         >
-                            {link.icon}
-                            {link.label}
+                            <div className="transition-transform group-hover:scale-110">
+                                {link.icon}
+                            </div>
+                            <span>{link.label}</span>
                         </NavLink>
                     ))}
                 </nav>
@@ -46,13 +48,13 @@ const BuyerSidebar = () => {
 
             {/* 🚪 Logout Button */}
             <button
-                onClick={handleLogout}
-                className="flex items-center gap-3 px-6 py-3 text-red-600 hover:bg-red-50 border-t transition"
+                onClick={logoutUser}
+                className="flex items-center justify-center gap-2 bg-white/20 text-white font-semibold py-2 rounded-lg hover:bg-red-500/90 hover:shadow-lg transition-all"
             >
-                <LogOut size={18} />
+                <LogOut size={20} />
                 Logout
             </button>
-        </div>
+        </aside>
     );
 };
 
