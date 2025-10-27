@@ -65,16 +65,9 @@ const BuyerNavbar = () => {
           </button>
 
           {isOpen && (
-            <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg py-2 z-50">
-              <div className="px-4 py-2 text-sm text-gray-700 border-b">
-                {user?.email || "No email"}
-              </div>
-              <button
-                onClick={handleLogout}
-                className="flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 w-full"
-              >
-                <LogOut size={16} /> Logout
-              </button>
+            <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg px-3 py-2 z-50">
+              {user?.email || "No email"}
+
             </div>
           )}
         </div>
